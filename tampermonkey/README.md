@@ -3,7 +3,7 @@
 To use any of these, you will first need to install [Tampermonkey](https://www.tampermonkey.net/) or [Greasemonkey](https://www.greasespot.net/). They are intended to be usable on both Firefox and Chrome, but I may not test usage on Firefox as thoroughly. Please feel free to file an issue here or contact me by gmail (also irrationalpie7) if you notice any issues or have ideas for improvements!
 
 ## AO3 all-chapter word counts
-You can [install the all-chapter word counts](https://github.com/irrationalpie7/fandom-scripts/raw/master/tampermonkey/all-word-counts.pub.user.js) script here. Enjoy!
+You can [install the all-chapter word counts](https://github.com/irrationalpie7/fandom-scripts/raw/main/tampermonkey/all-word-counts.pub.user.js) script here. Enjoy!
 
 ### Usage
 
