@@ -4,5 +4,5 @@ I was having trouble finding things I made, so I've decided to organize them her
 
 Links to available scripts/descriptions/installation instructions:
 
-1. [Tampermonkey/Greasemonkey scripts](tampermonkey/).
+1. [Tampermonkey/Greasemonkey scripts](tampermonkey/)
 2. [AO3 site skins](ao3-site-skins/)
