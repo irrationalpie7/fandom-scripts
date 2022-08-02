@@ -1,27 +1,21 @@
+/* Mentions bash/bashing, without saying something like, *no* bashing */
 .tags a[href*="bashing"i]:not([href*="%20no%20"i]):not([href*="/no%20"i]):not([href*="%20not%20"i]):not([href*="/not%20"i]):not([href*="%20zero%20"i]):not([href*="/zero%20"i]):not([href*="%20isn"i]):not([href*="/isn"i]),
+.tags a[href*="/bash%20"i]:not([href*="%20no%20"i]):not([href*="%20not%20"i]):not([href*="%20zero%20"i]):not([href*="%20isn"i]),
+.tags a[href*="%20bash%20"i]:not([href*="%20no%20"i]):not([href*="/no%20"i]):not([href*="%20not%20"i]):not([href*="/not%20"i]):not([href*="%20zero%20"i]):not([href*="/zero%20"i]):not([href*="%20isn"i]):not([href*="/isn"i]):not([href*="%20don"i]):not([href*="/don"i]),
+.tags a[href*="%20bashed"i]:not([href*="%20no%20"i]):not([href*="/no%20"i]):not([href*="%20not%20"i]):not([href*="/not%20"i]):not([href*="%20zero%20"i]):not([href*="/zero%20"i]):not([href*="%20isn"i]):not([href*="/isn"i]):not([href*="%20don"i]):not([href*="/don"i]),
+.tags a[href*="/bashed"i]:not([href*="%20no%20"i]):not([href*="%20not%20"i]):not([href*="%20no%20one"i]):not([href*="%20no-one"i]):not([href*="%20noone"i]),
+
+/* Is bashing ... but */
 .tags a[href*="/is%20"i][href*="%20bashing%20but"i],
 .tags a[href*="%20is%20"i][href*="%20bashing%20but"i],
 .tags a[href*="'s%20"i][href*="%20bashing%20but"i],
 .tags a[href*="‘s%20"i][href*="%20bashing%20but"i],
 .tags a[href*="’s%20"i][href*="%20bashing%20but"i],
 .tags a[href*="extreme"i][href*="%20bashing%20but"i],
-.tags a[href*="/bash%20"i]:not([href*="%20no%20"i]):not([href*="%20not%20"i]):not([href*="%20zero%20"i]):not([href*="%20isn"i]),
 .tags a[href*="try%20not%20"i][href*="%20bash"i][href*="%20but%20"i],
 .tags a[href*="tried%20not%20"i][href*="%20bash"i][href*="%20but%20"i],
-.tags a[href*="%20bash%20"i]:not([href*="%20no%20"i]):not([href*="/no%20"i]):not([href*="%20not%20"i]):not([href*="/not%20"i]):not([href*="%20zero%20"i]):not([href*="/zero%20"i]):not([href*="%20isn"i]):not([href*="/isn"i]):not([href*="%20don"i]):not([href*="/don"i]),
-.tags a[href*="%20bashed"i]:not([href*="%20no%20"i]):not([href*="/no%20"i]):not([href*="%20not%20"i]):not([href*="/not%20"i]):not([href*="%20zero%20"i]):not([href*="/zero%20"i]):not([href*="%20isn"i]):not([href*="/isn"i]):not([href*="%20don"i]):not([href*="/don"i]),
-.tags a[href*="/bashed"i]:not([href*="%20no%20"i]):not([href*="%20not%20"i]):not([href*="%20no%20one"i]):not([href*="%20no-one"i]):not([href*="%20noone"i]),
-.tags a[href*="%20not%20"i][href*="%20friendly"i],
-.tags a[href*="/not%20"i][href*="%20friendly"i],
-.tags a[href*="justified%20hatred"i],
-.tags a[href*="/fuck%20"i]:not([href*="buddies"i]):not([href*="give"i]):not([href*="say"i]):not([href*="said"i]):not([href*="with"i]):not([href*="all"i]),
-.tags a[href*="%20unfriendly"i],
-.tags a[href*="-unfriendly"i],
-.tags a[href*="really%20sucks"i],
-.tags a[href*="%20critical"i],
-.tags a[href*="%20criticism"i],
-.tags a[href*="critical%20of"i],
-.tags a[href*="criticism%20of"i],
+
+/* Mentions not for you/don't read this if...*/
 .tags a[href*="not%20for%20"i][href*="%20fans"i],
 .tags a[href*="not%20for%20"i][href*="%20stans"i],
 .tags a[href*="not%20for%20"i][href*="%20lovers"i],
@@ -44,11 +38,36 @@
 .tags a[href*="/don"i][href*="t%20read%20this"i][href*="%20if%20"i],
 .tags a[href*="not%20read%20this"i][href*="%20if%20"i],
 .tags a[href*="not%20read%20this"i][href*="/if%20"i],
-.tags a[href$="%20hate"i]:not([href*="%20no%20"i]):not([href*="/no%20"i]):not([href*="%20not%20"i]):not([href*="/not%20"i]):not([href*="%20zero%20"i]):not([href*="/zero%20"i]):not([href*="%20isn"i]):not([href*="/isn"i]):not([href*="%20don"i]):not([href*="/don"i]),
-.tags a[href*="%20hate%20"i]:not([href*="%20no%20"i]):not([href*="/no%20"i]):not([href*="%20not%20"i]):not([href*="/not%20"i]):not([href*="%20zero%20"i]):not([href*="/zero%20"i]):not([href*="%20isn"i]):not([href*="/isn"i]):not([href*="%20don"i]):not([href*="/don"i]):not([href*="%20he%20"i]):not([href*="/he%20"i]):not([href*="%20she%20"i]):not([href*="/she%20"i]):not([href*="%20they%20"i]):not([href*="/they%20"i]),
-.tags a[href*="%20hatred"i]:not([href*="%20no%20"i]):not([href*="%20not%20"i]):not([href*="%20isn"i]):not([href*="/no%20"i]):not([href*="/not%20"i]):not([href*="/isn"i]):not([href*="'s%20"i]):not([href*="‘s%20"i]):not([href*="’s%20"i]):not([href*="%20his%20"i]):not([href*="/his%20"i]):not([href*="%20her%20"i]):not([href*="/her%20"i]):not([href*="%20their%20"i]):not([href*="/their%20"i]),
-.tags a[href*="anti-"i],
-.tags a[href*="anti%20"i] {
+
+/* Starts with fuck (lots of false-positives to get rid of) */
+.tags a[href*="/fuck%20"i]:not([href*="buddies"i]):not([href*="give"i]):not([href*="say"i]):not([href*="said"i]):not([href*="with"i]):not([href*="fuck%20all"i]):not([href*="fuck-all"i]):not([href*="fuck%20up"i]):not([href*="fuck-up"i]):not([href*="fucks%20up"i]):not([href*="fuck%20me"i]):not([href*="fuck%20or%20die"i]):not([href*="fuck-or-die"i]),
+
+/* Ends with hate (like, "[name] hate") */
+.tags a[href$="%20hate"i]:not([href*="hates"i]):not([href*="%20no%20"i]):not([href*="/no%20"i]):not([href*="%20not%20"i]):not([href*="/not%20"i]):not([href*="%20zero%20"i]):not([href*="/zero%20"i]):not([href*="%20isn"i]):not([href*="/isn"i]):not([href*="%20don"i]):not([href*="/don"i]),
+
+/* Mentions hate/hatred. */
+.tags a[href*="%20hate%20"i]:not([href*="%20no%20"i]):not([href*="/no%20"i]):not([href*="%20not%20"i]):not([href*="/not%20"i]):not([href*="%20zero%20"i]):not([href*="/zero%20"i]):not([href*="%20isn"i]):not([href*="/isn"i]):not([href*="%20don"i]):not([href*="/don"i]):not([href*="%20he%20"i]):not([href*="/he%20"i]):not([href*="%20she%20"i]):not([href*="/she%20"i]):not([href*="%20they%20"i]):not([href*="/they%20"i]):not([href*="hate%20me"i]):not([href*="hate%20sex"i]):not([href*="hate-sex"i]),
+.tags a[href*="%20hatred"i]:not([href*="%20no%20"i]):not([href*="%20not%20"i]):not([href*="%20isn"i]):not([href*="/no%20"i]):not([href*="/not%20"i]):not([href*="/isn"i]):not([href*="'s%20"i]):not([href*="‘s%20"i]):not([href*="’s%20"i]):not([href*="%20his%20"i]):not([href*="/his%20"i]):not([href*="%20her%20"i]):not([href*="/her%20"i]):not([href*="%20their%20"i]):not([href*="/their%20"i]):not([href*="self%20hatred"i]),
+
+/* Not [character] friendly */
+.tags a[href*="%20not%20"i][href*="%20friendly"i],
+.tags a[href*="/not%20"i][href*="%20friendly"i]
+
+/* Misc character name modifiers */
+.tags a[href*="%20unfriendly"i],
+.tags a[href*="-unfriendly"i],
+.tags a[href*="really%20sucks"i],
+.tags a[href*="%20critical"i],
+.tags a[href*="%20criticism"i],
+.tags a[href*="critical%20of"i],
+.tags a[href*="criticism%20of"i],
+.tags a[href*="anti-"i]:not([href*="depress"i]):not([href*="anxiety"i]),
+.tags a[href*="anti%20"i]:not([href*="depress"i]):not([href*="anxiety"i]),
+.tags a[href*="/evil%20"i],
+.tags a[href*="/evil!"i],
+.tags a[href*="don't%20like"i],
+.tags a[href*="don‘t%20like"i],
+.tags a[href*="don’t%20like"i] {
     text-decoration: line-through;
     font-weight: bold;
 }
