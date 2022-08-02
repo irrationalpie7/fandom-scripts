@@ -1,25 +1,62 @@
-from xml.etree.ElementTree import canonicalize
-from bs4 import BeautifulSoup
+from bs4 import BeautifulSoup, NavigableString
 import urllib.request
 import sys
 import re
 
 
-def canonical(origurl, relativeurl):
-    m = re.search(r'https?://[^/]*', relativeurl)
+def canonical(orig_url, relative_url):
+    m = re.search(r'https?://[^/]*', relative_url)
     if m:
-        return relativeurl
-    m = re.search(r'https?://[^/]*', origurl)
-    return f"{m.group(0)}{relativeurl}"
+        return relative_url
+    m = re.search(r'https?://[^/]*', orig_url)
+    return f"{m.group(0)}{relative_url}"
 
 
-def clearTag(tag, origurl):
-    del tag['class']
-    del tag['style']
-    for child in tag.findChildren():
-        if child.has_attr('href'):
-            child["href"] = canonical(origurl, child["href"])
-        clearTag(child, origurl)
+def get_soup(url):
+    # this sets a non-robot user agent so we don't get blocked
+    user_agent = 'Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.9.0.7) Gecko/2009021910 Firefox/3.0.7'
+    headers = {'User-Agent': user_agent, }
+    request = urllib.request.Request(
+        url, None, headers)  # The assembled request
+    response = urllib.request.urlopen(request)
+    return BeautifulSoup(response.read(), "lxml")
+
+
+def remove_style_attribute(element):
+    if isinstance(element, NavigableString):
+        return
+    if element.has_attr('style'):
+        element['data-orig-style'] = element['style']
+        del element['style']
+
+
+def clean(content, orig_url):
+    # remove ads, scripts, and styles
+    for data in content.select('script, style, .ads, .adsbygoogle'):
+        data.decompose()
+
+    # remove styles specified as attributes
+    remove_style_attribute(content)
+    for descendant in content.descendants:
+        remove_style_attribute(descendant)
+
+    # totally empty filler elements (and their otherwise empty parents)
+    # can go bye bye
+    for data in content.select('div, p, span'):
+        # (no text or child elements)
+        while data.text.strip() == "" and len(data.find_all()) == 0:
+            parent = data.parent
+            data.decompose()
+            data = parent
+
+    # technically if it's linking to another chapter or something it makes
+    # more sense to link within the epub, but eh.
+    for data in content.select('[href]'):
+        # this is a half-assed attempt to not break footnotes
+        if not data["href"].startswith('#'):
+            data["href"] = canonical(orig_url, data["href"])
+
+    return content
 
 
 # table of contents:
@@ -33,51 +70,48 @@ def clearTag(tag, origurl):
 # title: .chapter-title
 # content: #chapter-content
 
-def get_soup(url):
-    user_agent = 'Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.9.0.7) Gecko/2009021910 Firefox/3.0.7'
-    headers = {'User-Agent': user_agent, }
-    request = urllib.request.Request(
-        url, None, headers)  # The assembled request
-    response = urllib.request.urlopen(request)
-    return BeautifulSoup(response.read(), "lxml")
+
+def get_chapter_urls(toc_url, chapter_url_selector='.list-chapter a'):
+    soup = get_soup(toc_url)
+    return [canonical(toc_url, x["href"]) for x in soup.select(chapter_url_selector)]
 
 
-def get_urls(url):
-    soup = get_soup(url)
-    return [canonical(url, x["href"]) for x in soup.select('.list-chapter a')]
+def download_chapters(offset, multi_chapter_url, chapter_select=".chapter"):
+    # alternative that has the url of a page with the contents of multiple
+    # chapters on it
+    soup = get_soup(multi_chapter_url)
+    chapters = soup.select(chapter_select)
+    for i, chapter_soup in enumerate(chapters):
+        save_chapter(chapter_soup, multi_chapter_url, i+offset)
+        if i+offset % 50 == 49:
+            print(f"Processed {i+offset+1} chapters")
+    return offset + len(chapters)
 
 
-def download_chapters(offset, url):
-    urls = get_urls(url)
+def download_chapters_toc(offset, toc_url):
+    # alternative that has the url of a table of contents
+    urls = get_chapter_urls(toc_url)
     for i, chapter_url in enumerate(urls):
-        download_chapter(chapter_url, i+offset)
+        save_chapter(get_soup(chapter_url), chapter_url, i+offset)
+        if i+offset % 50 == 49:
+            print(f"Downloaded {i+offset} chapters")
+    return offset + len(urls)
 
 
-def remove_tags(content):
-    # remove ads and such
-    for data in content.select('script, .ads, .adsbygoogle'):
-        # Remove tags
-        data.decompose()
+def save_chapter(chapter_soup, url, chapter_i, chapter_content_select="#chapter-content", chapter_title_select=".chapter-title"):
 
-    return content
+    title = chapter_soup.select(chapter_title_select, limit=1)[0].text
+    content = '\n'.join(
+        f"{clean(x, url).prettify()}" for x in chapter_soup.select(chapter_content_select))
 
+    file = open(
+        f"chapters/chapter-{chapter_i+1:06}.xhtml", "w", encoding="utf8")
 
-def download_chapter(url, chapter_i, chapter_content_select="#chapter-content", chapter_title_select=".chapter-title"):
-    soup = get_soup(url)
-    title = soup.select(chapter_title_select, limit=1)[0].text
-    content = ''.join(
-        f"{remove_tags(x).prettify()}\n" for x in soup.select(chapter_content_select))
-
-    file = open(f"chapters/chapter-{chapter_i+1}.xhtml", "w", encoding="utf8")
-    file.write('<html xmlns="http://www.w3.org/1999/xhtml">')
-    file.write("\n<head>")
-    file.write("\n<title>" + title + "</title>")
-    file.write("\n</head>")
-    file.write("\n<body>")
-    file.write("\n<strong>" + title + "</strong>" + "\n")
-    file.write(content)
-    file.write("\n</body>")
-    file.write("\n</html>")
+    file.write("<?xml version='1.0' encoding='utf-8'?>\n")
+    file.write('<html xmlns="http://www.w3.org/1999/xhtml">\n')
+    file.write(f"<head>\n<title>{title}</title>\n</head>\n")
+    file.write(
+        f"<body>\n<strong>{title}</strong>\n{content}\n</body>\n</html>")
     file.close()
 
 
@@ -88,9 +122,10 @@ if not url.startswith("http"):
 else:
     print(f"Fetching: {url}")
 
-download_chapters(0, url)
-print("50 / 3159")
-
+toc_urls = [url]
 for i in range(2, 65):
-    download_chapters(i*50-50, f"{url}?page={i}")
-    print(f"{50*i} / 3159")
+    toc_urls.append(f"{url}?page={i}")
+
+offset = 0
+for url in toc_urls:
+    offset = download_chapters_toc(offset, url)
