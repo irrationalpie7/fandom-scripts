@@ -52,7 +52,7 @@
 
 /* Not [character] friendly */
 .tags a[href*="%20not%20"i][href*="%20friendly"i],
-.tags a[href*="/not%20"i][href*="%20friendly"i]
+.tags a[href*="/not%20"i][href*="%20friendly"i],
 
 /* Misc character name modifiers */
 .tags a[href*="%20unfriendly"i],
