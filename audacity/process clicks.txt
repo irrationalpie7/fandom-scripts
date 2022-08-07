@@ -1,0 +1,12 @@
+AddLabelPlus:anchor="0" anchormode="Label Start" anchorpos="Positive" duration="0.1" mode="Selection Start" text="start"
+AddLabelPlus:anchor="0.001" anchormode="Label End" anchorpos="Negative" duration="0.1" mode="Selection End" text="end"
+ExtendSelection:mode="Selected" numtracks="2"
+SplitCutLabels:
+ExtendSelection:mode="Selected" numtracks="1"
+AddMonoBelow:Use_Preset="<Factory Defaults>"
+ShiftDown:
+ExtendSelection:mode="Focused" numtracks="1"
+Paste:
+SetTrackAudio:Mute="1"
+ShiftDown:
+TrackClose:
