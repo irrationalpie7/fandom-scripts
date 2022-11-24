@@ -1,0 +1,13 @@
+/* Set links to default to grey instead of black when they've been visited and then you hover over them */
+a:visited:hover,
+.announcement .userstuff a:visited:hover {
+  color: #999;
+}
+
+/* Some links instead go blue with black text when you hover over them; preserve that behavior even if you've visited them. */
+a.tag:visited:hover,
+#footer a:visited:hover,
+.splash .favorite li:nth-of-type(odd) a:visited:hover {
+  background: #5998D6;
+  color: #111;
+}
