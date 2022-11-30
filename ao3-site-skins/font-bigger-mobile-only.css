@@ -56,10 +56,12 @@ p {
     font-size: .85rem;
 }
 
-/* Make the drop-down menu under "Hi, username!" right-aligned
+/* Make the drop-down menu under "Hi, username!" only as wide as the text
  * so that the text is still visible even at a very large font size.
  */
 .dropdown-menu li {
     font-size: 1rem;
-    text-align: right !important;
+}
+#header .menu {
+  width: unset;
 }
