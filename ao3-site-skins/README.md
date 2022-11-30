@@ -34,6 +34,16 @@ It is very specific to my current phone and also chrome on android, so I'm not s
 
 Off-topic but I'm fairly certain there is some sort of bug in how mobile chrome decide the font size on certain elements, because for example sometimes the relationship tags on a work page are smaller than the other tags for literally no reason. The text of a work will also sometimes show much larger than usual for a second when the page first loads. This skin *does not fix this issue*, just fights with it in weird ways sometimes.
 
+## Make menu dropdowns narrower
+
+Normally menu dropdowns (e.g. the one under "Hi Username!") are rather wide, which can cause the text to be hidden off-screen on mobile. This snippet, added to a site skin, will limit dropdowns to the text width instead. If you wish to only apply this on mobile, pick "only screen and (max-width: 42em)" from the "Media:" list in the "Advanced" section of the site skin editor. If you want other things in your site skin to apply on both mobile and desktop, one skin will need to be set as the parent of the other so that the two skins can have different media settings.
+
+```
+#header .menu {
+  width: unset;
+}
+```
+
 ## Reversi correction
 
 To use this site skin, create a new site skin with the contents of `reversi-corrected.css` as the css, and set the public "Reversi" skin as the parent.
