@@ -104,6 +104,7 @@ select {
 #small_login,
 #header .dropdown:hover .current+.menu,
 .group.listbox,
+.listbox .index,
 fieldset fieldset.listbox,
 form blockquote.userstuff,
 input:focus,
@@ -242,8 +243,12 @@ a.tag:hover,
 
 .blurb h4 a:visited,
 .listbox .heading a:visited {
-    /* less saturated medium color */
-    color: rgb(187, 111, 86);
+    /* less saturated text color */
+    color: #a86;
+    /* previously: less saturated medium color. but
+        (a) it didn't have enough contrast and 
+        (b) it was applied inconsistently (e.g. not to blurb titles on dashboard)
+    color: rgb(187, 111, 86); */
 }
 
 .blurb h4 a:hover,
