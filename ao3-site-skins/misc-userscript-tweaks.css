@@ -1,0 +1,27 @@
+/* For AO3 Tone Marks, underline replacements so
+ * I see names coming, and hide the speaker
+ * symbol by names with audio. */
+.replacement {
+  text-decoration: underline;
+}
+.audio-guide {
+  display: none;
+}
+
+/* For the all-chapter word counts script, make
+ * the word count a green that works well with my
+ * site skin. */
+.chapter-words {
+  font-weight: bold;
+  color: #3ea060;
+}
+
+/* For the "see podfic first" script, instead of
+ * changing the background color, add a border.
+ * Bonus: this also works on mobile. */
+.jump:has(a[href*="children"i]) {
+  background-color: inherit !important;
+  border: solid;
+  border-width: 1px;
+  padding: 5px 10px 10px 10px;
+}
