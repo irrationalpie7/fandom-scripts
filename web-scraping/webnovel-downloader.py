@@ -75,6 +75,10 @@ def get_chapter_urls(toc_url, chapter_url_selector='.list-chapter a'):
     soup = get_soup(toc_url)
     return [canonical(toc_url, x["href"]) for x in soup.select(chapter_url_selector)]
 
+# 1-216, but for some reason there's no 106:
+# https://www.wuxiaworld.eu/chapter/the-e-sports-circles-toxic-assembly-camp-#
+def get_chapter_urls_wuxiaworld(base_url):
+    return [f"{base_url}{x}" for x in range(1, 106)] + [f"{base_url}{x}" for x in range(107, 217)]
 
 def download_chapters(offset, multi_chapter_url, chapter_select=".chapter"):
     # alternative that has the url of a page with the contents of multiple
@@ -87,33 +91,56 @@ def download_chapters(offset, multi_chapter_url, chapter_select=".chapter"):
             print(f"Processed {i+offset+1} chapters")
     return offset + len(chapters)
 
-
 def download_chapters_toc(offset, toc_url):
     # alternative that has the url of a table of contents
-    urls = get_chapter_urls(toc_url)
+    urls = get_chapter_urls_wuxiaworld(toc_url)
     for i, chapter_url in enumerate(urls):
         save_chapter(get_soup(chapter_url), chapter_url, i+offset)
         if i+offset % 50 == 49:
             print(f"Downloaded {i+offset} chapters")
     return offset + len(urls)
 
-
-def save_chapter(chapter_soup, url, chapter_i, chapter_content_select="#chapter-content", chapter_title_select=".chapter-title"):
+# For https://novelfull.com/reincarnation-of-the-strongest-sword-god.html
+def extract_chapter_info_novelfull(chapter_soup, url):
+    chapter_content_select="#chapter-content"
+    chapter_title_select=".chapter-title"
 
     title = chapter_soup.select(chapter_title_select, limit=1)[0].text
     content = '\n'.join(
         f"{clean(x, url).prettify()}" for x in chapter_soup.select(chapter_content_select))
+    return [title, content]
+
+# https://www.wuxiaworld.eu/chapter/the-e-sports-circles-toxic-assembly-camp-# for 1-216, -106
+def extract_chapter_info_wuxiaworld(chapter_soup, url):
+    chapter_content_select="#chapterText"
+    chapter_title_select="h1"
+
+    title = chapter_soup.select(chapter_title_select, limit=1)[0].text
+    content = '\n'.join(
+        f"{clean(x, url).prettify()}" for x in chapter_soup.select(chapter_content_select))
+    content = re.sub("<div[^>]*>", "<p>", content).replace("</div>","</p>")
+    content = re.sub("<p>\s*</p>", "", content)
+    return [title, content]
+
+def save_chapter(chapter_soup, url, chapter_i):
+
+    chapter_info = extract_chapter_info_wuxiaworld(chapter_soup, url)
+    title = chapter_info[0]
+    content = chapter_info[1]
 
     file = open(
-        f"chapters/chapter-{chapter_i+1:06}.xhtml", "w", encoding="utf8")
+        f"chapters-3/chapter-{chapter_i+1:06}.xhtml", "w", encoding="utf8")
 
     file.write("<?xml version='1.0' encoding='utf-8'?>\n")
     file.write('<html xmlns="http://www.w3.org/1999/xhtml">\n')
     file.write(f"<head>\n<title>{title}</title>\n</head>\n")
     file.write(
-        f"<body>\n<strong>{title}</strong>\n{content}\n</body>\n</html>")
+        f"<body>\n<h1>{title}</h1>\n{content}\n</body>\n</html>")
     file.close()
 
+# chapter urls:
+# https://www.wuxiaworld.eu/chapter/the-e-sports-circles-toxic-assembly-camp-# for 1-216, -106
+# chapter text: Array.from(document.querySelectorAll("#chapterText")).map(div => div.innerHTML)
 
 print('Usage:\npython webnovel-downloader.py https://novelfull.com/reincarnation-of-the-strongest-sword-god.html\nNote that this script makes a couple assumptions about\nformat and such based on this original link.')
 url = sys.argv[1]
@@ -122,10 +149,12 @@ if not url.startswith("http"):
 else:
     print(f"Fetching: {url}")
 
-toc_urls = [url]
-for i in range(2, 65):
-    toc_urls.append(f"{url}?page={i}")
+download_chapters_toc(0, url)
 
-offset = 0
-for url in toc_urls:
-    offset = download_chapters_toc(offset, url)
+# toc_urls = [url]
+# for i in range(2, 65):
+#     toc_urls.append(f"{url}?page={i}")
+
+# offset = 0
+# for url in toc_urls:
+#     offset = download_chapters_toc(offset, url)
