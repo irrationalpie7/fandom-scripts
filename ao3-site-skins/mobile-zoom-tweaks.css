@@ -1,0 +1,190 @@
+/* Misc minor adjustments */
+
+/* Make the dropdown menu from "Hi username!" narrower so it doesn't get cut off */
+#header .menu {
+  width: unset;
+}
+
+/* Allow site header+logo to fit on a single line */
+#header .logo {
+  transform: scale(.8);
+}
+
+#header {
+  font-size: .8em;
+}
+
+/* Make h2 (for example, work title on a work page) smaller */
+h2 {
+  font-size: 1.75em;
+}
+
+/* Make the header for a search (x-x of x works in ...) less comically large. */
+.filtered h2.heading {
+  font-size: 1.6em;
+}
+
+/* Make work start/end notes wider */
+div.preface {
+  margin-left: 1em;
+  margin-right: 1em;
+}
+
+/* This section is about button spacing, mostly to make them slightly more 
+ * condensed */
+
+/* Condense rows of buttons so that more of them fit next to each other. */
+.actions a,
+.actions a:link,
+.actions li input,
+.actions li input[type="submit"],
+.actions li .current,
+.actions li label {
+  font-size: .95em;
+  padding: 0.25em 0.6em;
+}
+
+.actions > * {
+  padding-left: 0;
+}
+
+/* Vertically condense the rows of buttons at the top of a user dashboard. */
+#dashboard a,
+#dashboard span {
+  line-height: 1.5;
+}
+
+/* This section adjusts work/bookmark blurb properties to try to make better
+ * usage of the space available */
+
+/* Slightly increase font for userstuff (work text, summary, etc).
+ * This also applies on work pages because I decided I preferred that.  */
+.userstuff {
+  font-size: 105%;
+  line-height: 1.35;
+}
+
+/* Slightly decrease font for tags. This also applies on work pages
+ * because I decided I preferred that.  */
+.tags {
+  font-size: 95%;
+}
+
+/* Make bookmarker notes/tags be full size, rather than smaller */
+.bookmark .user .meta,
+h6.meta.heading {
+  font-size: 100%;
+}
+
+/* Wrap the date on a work blurb to provide more space for the title/author(s). */
+.header .datetime,
+comment[bogus="wrap the date"] {
+  width: 3em;
+  text-align: center;
+}
+
+/* Steal more (horizontal) space for the work title/author(s)
+ * Note: this also relies on the icon shenanigans below making the icons narrower. */
+.blurb .header .heading,
+comment[bogus="use the wrapped date to steal more space for the work title"] {
+  margin-right: 52px;
+  margin-left: 52px;
+}
+
+/* This whole section is about making the icons in blurb corners smaller,
+ * so we can have more horizontal width for the title/authors. */
+
+/* The width of these icons was originally 25px */
+.blurb ul.required-tags li,
+.blurb ul.required-tags li a,
+.bookmark .status a,
+.bookmark span.count {
+  width: 20px;
+  height: 20px;
+}
+
+/* I kept the original spacing of 3px, but if you want the icons closer
+ * together or farther apart, here's where you'd change that. */
+.blurb ul.required-tags li {
+  margin-bottom: 3px;
+}
+
+/* Originally 28px (25px + 3px above) */
+.blurb ul.required-tags li + li + li,
+.blurb ul.required-tags li + li + li + li,
+.bookmark span.count {
+  left: 23px;
+}
+
+/* Originally 28px (25px + 3px above) */
+.blurb ul.required-tags li + li + li + li {
+  top: 23px;
+}
+
+/* Adjust the bookmark count box a little more */
+.bookmark span.count {
+  margin-top: 3px;
+  margin-left: 3px;
+  /* For some reason this helps with vertically centering the count */
+  line-height: 1.6;
+}
+
+/* Make the bookmark count actually horizontally centered (not sure why this is needed) */
+.bookmark span.count a {
+  float: left;
+  margin-left: -1px;
+}
+
+/* Scale icon images down to 0.8 (80% of 25px is 20px) */
+.blurb ul.required-tags li span,
+.bookmark .status a > span {
+  transform: scale(0.8);
+}
+
+/* Scale "mystery work" icon down by 0.7 and adjust placement */
+.picture .icon img,
+.index .picture .icon {
+  transform: scale(0.7);
+  top: -10px;
+}
+
+/* Adjust position of bookmark status/count icons in top right of blurb */
+.bookmark p.status {
+  right: 0;
+}
+
+/* Adjust work update time in bookmark blurb to be below the status/count icons */
+.bookmark div.user .datetime {
+  top: 1.15em;
+}
+
+/* This section deals with comments on works, adjusting pseud and icon size to
+ * allow things to fit more neatly on a single line, if possible. */
+
+/* Scale and adjust placement of user icon in a comment */
+.comment div.icon {
+  margin: 0;
+  transform: scale(.7);
+  position: absolute;
+  top: -1px;
+  left: -1px;
+  /* The default skin has a 5px bottom border that I find ugly */
+  border: none;
+}
+
+/* Adjust position of commenter's username/pseud so it's just
+ * to the right of their icon, and make the whole comment header
+ * at least as tall as the icon + some padding */
+.comment h4.byline {
+  padding-left: 47px;
+  min-height: 42px;
+}
+
+/* Wrap the date/time a comment was posted to two lines, to allow
+ * longer usernames before the date gets forced to the next line */
+.comment .posted.datetime {
+  width: 10em;
+  text-align: right;
+  font-size: .95em;
+  float: right;
+}
