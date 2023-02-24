@@ -53,11 +53,12 @@ li.relationships a,
     background: #333;
 }
 
-/* set blank warning square to match background color */
+/* Set blank warning/bookmark rec status square to match background color */
 .required-tags .rating-notrated,
 .required-tags .category-none,
 .required-tags .warning-no,
-.status .count {
+.status .count,
+.bookmark .status .count {
     box-sizing: border-box;
     /* default background color */
     background: #333;
@@ -65,8 +66,9 @@ li.relationships a,
     outline: 1px solid #555;
 }
 
-/* also outlines other warning squares for symmetry */
-.blurb ul.required-tags li {
+/* also outlines other warning/bookmark squares for symmetry */
+.blurb ul.required-tags li a > span,
+.bookmark .status span {
     outline: 1px solid #555;
 }
 
@@ -179,27 +181,6 @@ form blockquote.userstuff,
     box-shadow: 1px 1px 3px #000;
 }
 
-#dashboard .current,
-.actions a:active,
-#outer .current,
-a.current,
-.current a:visited,
-span.unread,
-.replied,
-span.claimed,
-dl.index dd,
-.own,
-.draft,
-.draft .unread,
-.child,
-.unwrangled,
-.unreviewed,
-.ui-sortable li:hover {
-    background: #000;
-    border-color: #555;
-    box-shadow: -1px -1px 3px #000;
-}
-
 input,
 select,
 textarea {
@@ -256,7 +237,6 @@ a.tag:hover,
     /*b/w eb9 and b53 medium accent color */
     color: #b53;
 }
-
 
 #header #greeting img,
 #header .heading a,
@@ -380,6 +360,24 @@ input[type="submit"]:hover {
     color: #b53;
 }
 
+/* Button that represents current page or "tab" */
+#dashboard .current,
+.actions a:active,
+.current,
+#outer .current,
+a.current,
+.current a:visited,
+span.unread,
+.replied,
+span.claimed,
+dl.index dd,
+.own,
+.draft,
+.draft .unread,
+.child,
+.unwrangled,
+.unreviewed,
+.ui-sortable li:hover,
 .actions a:hover,
 .actions input:hover,
 #dashboard a:hover,
@@ -390,18 +388,7 @@ input[type="submit"]:hover {
     color: #b53;
     border-color: #000;
     box-shadow: inset 2px 2px 2px #000;
-}
-
-/* button that's currently being clicked */
-.actions a:active,
-.current,
-a.current,
-.current a:visited {
-    /* accent color (previously #5998d6) */
-    color: #b53;
-    background: #444;
-    border-color: #fff;
-    box-shadow: inset 1px 1px 3px #333;
+    background: #222;
 }
 
 .delete a,
@@ -483,4 +470,8 @@ a.tag:visited:hover,
 .splash .favorite li:nth-of-type(odd) a:visited:hover {
     /* accent color (previously #5998d6) */
     color: #b53;
+}
+
+.javascript .filters fieldset {
+    border: 1px solid #555;
 }

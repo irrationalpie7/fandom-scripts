@@ -51,3 +51,9 @@ To use this site skin, create a new site skin with the contents of `reversi-corr
 The intention of this skin is to fix a bug in the Reversi skin: with the original Reversi skin, when you hover over links that you've previously visited they often have black text on a dark background and thus look pretty much invisible. This skin attempts to preserve everything about Reversi except to make that text stay gray instead of going black.
 
 If you're still seeing black text where you shouldn't, or text that should be black is now gray, let me know specifically where you see that happening and I can try to fix it!
+
+## Red-tinted Reversi
+
+This is based on the public [Reversi](https://archiveofourown.org/skins/929) site skin, but it's more red-tinted. Use the css in `reversi-replacement.css` if you would like to try it out. It's supposed to be a full replacement of reversi, but I personally set "Reversi" as its parent skin just in case, as falling through to Reversi if something is unspecified is probably better than falling through to the regular archive skin.
+
+![image](reversi-replacement.png)
