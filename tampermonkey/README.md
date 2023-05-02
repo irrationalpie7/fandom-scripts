@@ -21,6 +21,10 @@ After installing the extension, it will instead look something like this, where 
 
 The script may take a moment to load, since it has to fetch the content of the full-work page so that it can count the number of words in each chapter. This will not necessarily match AO3's word counts precisely. I'm using [this word counting implementation](https://github.com/byn9826/words-count), though the version I'm using may not be 100% up-to-date.
 
+## Smooth scrolling
+
+This extension slowly scrolls ao3 as you read. Use ctrl+x to scroll slowly, then slightly faster, then turn scrolling back off. I've tried to use comments to indicate how you could customize the shortcut and/or scrolling speeds if you have different preferences. [Install smooth scrolling](https://github.com/irrationalpie7/fandom-scripts/raw/main/tampermonkey/smooth-scrolling.pub.user.js).
+
 ## Tone Marks II
 
 This extension adds pinyin accent marks to work/series pages and blurbs on AO3 for some fandoms. More info [here](https://github.com/irrationalpie7/AO3-Tone-Marks).
