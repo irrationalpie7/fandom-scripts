@@ -4,7 +4,9 @@
 // @match       https://archiveofourown.org/*
 // @grant       none
 // @version     1.0
-// @author      -
+// @author      irrationalpie
+// @updateURL   https://github.com/irrationalpie7/fandom-scripts/raw/main/tampermonkey/smooth-scrolling.pub.user.js
+// @downloadURL https://github.com/irrationalpie7/fandom-scripts/raw/main/tampermonkey/smooth-scrolling.pub.user.js
 // @description Scroll slowly down ao3 as you read
 // ==/UserScript==
 
