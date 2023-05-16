@@ -21,6 +21,16 @@ After installing the extension, it will instead look something like this, where 
 
 The script may take a moment to load, since it has to fetch the content of the full-work page so that it can count the number of words in each chapter. This will not necessarily match AO3's word counts precisely. I'm using [this word counting implementation](https://github.com/byn9826/words-count), though the version I'm using may not be 100% up-to-date.
 
+## Unglitchify text
+
+The [Unglitchify text user script (install)](https://github.com/irrationalpie7/fandom-scripts/raw/main/tampermonkey/unglitchify.pub.user.js) cleans up glitchy characters from text on ao3. This is specifically referring to text like "P̶̳̘̗̚͜r̸̬̤͝o̷̱̖̰̐̽̀t̴͍̲̦̞̀́͝e̷̹̥̭̦͌c̶̘̣̲͂̒̐͝ͅt̶̥͎̅" ("Protect"). The implementation is inspired by this [other online tool to remove glitchy text](https://cable.ayra.ch/zalgo/).
+
+### Limitations
+
+1. If you find that after you install this, useful diacritic marks are missing on a particular story, I recommend temporarily disabling this userscript and reloading the page.
+2. This user script will run on all ao3 pages when it is enabled, and particularly for long stories the page might freeze while this runs, so it may make sense to keep this particular user script disabled except when you come across a story which requires it.
+3. This user script does not leave any indication that it has modified the page, so if the presence/absence of glitchy characters was being used to encode some sort of meaning, you will miss out on that.
+
 ## Smooth scrolling
 
 This extension slowly scrolls ao3 as you read. Use ctrl+x to scroll slowly, then slightly faster, then turn scrolling back off. I've tried to use comments to indicate how you could customize the shortcut and/or scrolling speeds if you have different preferences. [Install smooth scrolling](https://github.com/irrationalpie7/fandom-scripts/raw/main/tampermonkey/smooth-scrolling.pub.user.js).
