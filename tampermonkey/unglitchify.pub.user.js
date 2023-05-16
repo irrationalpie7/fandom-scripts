@@ -3,7 +3,7 @@
 // @namespace   irrationalpie scripts
 // @match       https://archiveofourown.org/*
 // @grant       none
-// @version     1.0
+// @version     1.1
 // @author      irrationalpie
 // @updateURL   https://github.com/irrationalpie7/fandom-scripts/raw/main/tampermonkey/unglitchify.pub.user.js
 // @downloadURL https://github.com/irrationalpie7/fandom-scripts/raw/main/tampermonkey/unglitchify.pub.user.js
@@ -21,7 +21,26 @@
 function unzalgo (origText) {
   // Excluded sequence is 0300-036F: Combining Diacritical Marks
 	const r = /[^\u0300-\u036F\u0489]+/g;
-	return ((origText || "").match(r) || [""]).join("");
+  const matches = origText.match(r) || [""];
+  var result = matches.join("");
+  if (result !== origText) {
+    var prevLong = true;
+    result = "";
+    for (const match of matches) {
+      if (prevLong && match.length === 1) {
+        result += "[[";
+      }
+      if (!prevLong && match.length > 1) {
+        result += "]]";
+      }
+      result += match;
+      prevLong = match.length > 1;
+    }
+    if (!prevLong) {
+      result += "]]";
+    }
+  }
+  return result;
 }
 
 /**

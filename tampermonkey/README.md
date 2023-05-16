@@ -23,13 +23,14 @@ The script may take a moment to load, since it has to fetch the content of the f
 
 ## Unglitchify text
 
-The [Unglitchify text user script (install)](https://github.com/irrationalpie7/fandom-scripts/raw/main/tampermonkey/unglitchify.pub.user.js) cleans up glitchy characters from text on ao3. This is specifically referring to text like "P̶̳̘̗̚͜r̸̬̤͝o̷̱̖̰̐̽̀t̴͍̲̦̞̀́͝e̷̹̥̭̦͌c̶̘̣̲͂̒̐͝ͅt̶̥͎̅" ("Protect"). The implementation is inspired by this [other online tool to remove glitchy text](https://cable.ayra.ch/zalgo/).
+The [Unglitchify text user script (install)](https://github.com/irrationalpie7/fandom-scripts/raw/main/tampermonkey/unglitchify.pub.user.js) cleans up glitchy characters from text on ao3. This is specifically referring to text like "P̶̳̘̗̚͜r̸̬̤͝o̷̱̖̰̐̽̀t̴͍̲̦̞̀́͝e̷̹̥̭̦͌c̶̘̣̲͂̒̐͝ͅt̶̥͎̅" ("Protect"). The resulting cleaned text will be surrounded by double square braces ("[[" and "]]"). The implementation is inspired by this [other online tool to remove glitchy text](https://cable.ayra.ch/zalgo/).
 
 ### Limitations
 
-1. If you find that after you install this, useful diacritic marks are missing on a particular story, I recommend temporarily disabling this userscript and reloading the page.
+1. If you find that after you install this, useful diacritic marks are missing on a particular story, I recommend temporarily disabling this userscript and reloading the page. 
 2. This user script will run on all ao3 pages when it is enabled, and particularly for long stories the page might freeze while this runs, so it may make sense to keep this particular user script disabled except when you come across a story which requires it.
-3. This user script does not leave any indication that it has modified the page, so if the presence/absence of glitchy characters was being used to encode some sort of meaning, you will miss out on that.
+3. The double square braces ("[[" and "]]") may be off by a character at either end of the glitchy text. Basically, I look at the gaps where glitchy characters got removed, and if I see a bit of text where there were glitchy characters between each letter, I'll assume that text belongs together. But if you had something like `he d.e.m.o.n.i.c.a.l.l.y says`, that would end up being recognized as `he d[[emonicall]]y says`. Conversely if you have something like `".D.e.m.o.n.i.c. .s.p.e.e.c.h.," he said`, you'd get `[["Demonic speech]]," he said`. Alternatively, if the author was trying to make it more readable by only adding some glitchy characters, you might get something even weirder: `H.i t.h.er.e.` becomes `[[H]]i t[[h]]er[[e]]`, which is sub-optimal.
+
 
 ## Smooth scrolling
 
