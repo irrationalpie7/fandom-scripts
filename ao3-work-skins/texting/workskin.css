@@ -13,15 +13,10 @@
   font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
   margin: 1em auto;
   border: 2px ridge #aaa;
-  padding: 0.5em 0;
+  padding: 0;
   display: table;
   overflow-wrap: break-word;
   hyphens: auto;
-}
-
-/* Respecify font for h3 since it normally has its own special rules */
-#workskin .phone h3 {
-  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
 
 /* Group chat or contact name */
@@ -35,13 +30,14 @@
   display: block;
   overflow-wrap: break-word;
   hyphens: auto;
+  /* Respecify font since headers may specify different font */
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
 
 /* Chat bubbles (text on left, breply on right) */
 #workskin .text,
 #workskin .breply {
-  margin: 0.5em;
-  margin-top: 0;
+  margin: 1em 0.5em;
   border-radius: 1em;
   padding: 0.5em 1em;
   max-width: 75%;
@@ -64,59 +60,49 @@
 }
 
 /* Adjustments for texts/breplies that follow each other */
-#workskin .breply + .breply,
-#workskin .breply + .hiddeninfo + .breply {
+#workskin .breply + .breply:not(.new),
+#workskin .breply + .hiddeninfo + .breply:not(.new) {
+  margin-top: -0.6em;
   border-top-right-radius: 0.1em;
 }
 
-#workskin .text + .text,
-#workskin .text + .hiddeninfo + .text {
+#workskin .text + .text:not(.new),
+#workskin .text + .hiddeninfo + .text:not(.new) {
+  margin-top: -0.6em;
   border-top-left-radius: 0.1em;
-}
-
-#workskin .breply + .text,
-#workskin .breply + .hiddeninfo + .text,
-#workskin .text + .breply,
-#workskin .text + .hiddeninfo + .breply {
-  margin-top: 0.75em;
 }
 
 /* Contact names in group chats, and timestamps */
 #workskin .time,
 #workskin .grouptext {
-  padding: 0.75em 1em;
   font-size: 0.75em;
-  line-height: 0.75em;
+  margin: 1em;
+  padding: 0;
   display: block;
   clear: both;
 }
 
 #workskin .time {
-  margin: 0.5em auto;
   text-align: center;
+  margin-bottom: 0;
 }
 
 #workskin .grouptext {
-  margin: 0 auto;
-  margin-left: 0;
-  padding-bottom: 0.5em;
   text-align: left;
+  padding-left: 0.5em;
+  margin-bottom: -1.1em;
 }
 
 #workskin .grouptext > strong {
   font-weight: normal;
 }
 
-#workskin .time + .grouptext {
-  padding-top: 0;
-}
-
 /* Use to visually check on hiddeninfo */
 #workskin .xhiddeninfo {
-    outline: 1px ridge #ff0000;
-    clear: both;
-    text-align: center;
-  }
+  outline: 1px ridge #ff0000;
+  clear: both;
+  text-align: center;
+}
 
 /* Hide text visually, but not from screen readers. */
 /* This is copied from here: https://github.com/angular/components/blob/main/src/cdk/a11y/_index.scss#L4C3-L35C4 */

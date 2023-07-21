@@ -1,0 +1,62 @@
+#workskin .who {
+  border-bottom: 2px ridge;
+  border-color: inherit;
+  font-size: 0.75em;
+  display: block;
+  margin: 0.5em -1.4em;
+  margin-top: -0.75em;
+  padding-left: 1.4em;
+  padding-right: 1.4em;
+  padding-top: .25em;
+  border-top-left-radius: 1.5em;
+}
+
+#workskin .who + br {
+  display: none;
+}
+
+#workskin .phone .text .who {
+  border-color: #c5c5ca;
+  background-image: linear-gradient(to right, #c5c5cac0 0.75em, #c5c5ca00 1.5em 100%);
+}
+
+#workskin .phone .breply .who {
+  border-color: #1289fe;
+  background-image: linear-gradient(to right, #1289fec0 0.75em, #1289fe00 1.5em 100%);
+}
+
+#workskin .phone .red .who {
+  border-color: #ed665b;
+  background-image: linear-gradient(to right, #ed665bc0 0.75em, #ed665b00 1.5em 100%);
+}
+
+#workskin .phone .orange .who {
+  border-color: #faa03e;
+  background-image: linear-gradient(to right, #faa03ec0 0.75em, #faa03e00 1.5em 100%);
+}
+
+#workskin .phone .yellow .who {
+  border-color: #fcc934;
+  background-image: linear-gradient(to right, #fcc934c0 0.75em, #fcc93400 1.5em 100%);
+}
+
+#workskin .phone .green .who {
+  border-color: #5bb974;
+  background-image: linear-gradient(to right, #5bb974c0 0.75em, #5bb97400 1.5em 100%);
+}
+
+#workskin .phone .lightblue .who {
+  border-color: #4ecde6;
+  background-image: linear-gradient(to right, #4ecde6c0 0.75em, #4ecde600 1.5em 100%);
+}
+
+#workskin .phone .purple .who {
+  border-color: #af5cf7;
+  background-image: linear-gradient(to right, #af5cf7c0 0.75em, #af5cf700 1.5em 100%);
+}
+
+#workskin .phone .pink .who {
+  border-color: #ff63b8;
+  background-image: linear-gradient(to right, #ff63b8c0 0.75em, #ff63b800 1.5em 100%);
+}
+
