@@ -1,0 +1,149 @@
+/* Note: text between pairs of /* will disappear when you save your workskin.
+ * It's just there to provide explanation. */
+
+#workskin {
+  position: relative;
+}
+
+/* The body of the phone */
+#workskin .phone {
+  width: 300px;
+  max-width: 95%;
+  position: relative;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  margin: 1em auto;
+  border: 2px ridge #aaa;
+  padding: 0.5em 0;
+  display: table;
+  overflow-wrap: break-word;
+  hyphens: auto;
+}
+
+/* Respecify font for h3 since it normally has its own special rules */
+#workskin .phone h3 {
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
+/* Group chat or contact name */
+#workskin .phoneheader {
+  border-bottom: 2px ridge #b2b2b2;
+  font-weight: bold;
+  padding-bottom: 0.5em;
+  padding-top: 0.5em;
+  margin: 0;
+  text-align: center;
+  display: block;
+  overflow-wrap: break-word;
+  hyphens: auto;
+}
+
+/* Chat bubbles (text on left, breply on right) */
+#workskin .text,
+#workskin .breply {
+  margin: 0.5em;
+  margin-top: 0;
+  border-radius: 1em;
+  padding: 0.5em 1em;
+  max-width: 75%;
+  clear: both;
+  position: relative;
+  overflow-wrap: break-word;
+  hyphens: auto;
+}
+
+#workskin .text {
+  float: left;
+  border-bottom-left-radius: 0.1em;
+  outline: 2px ridge #c5c5ca;
+}
+
+#workskin .breply {
+  float: right;
+  border-bottom-right-radius: 0.1em;
+  outline: 2px ridge #1289fe;
+}
+
+/* Adjustments for texts/breplies that follow each other */
+#workskin .breply + .breply,
+#workskin .breply + .hiddeninfo + .breply {
+  border-top-right-radius: 0.1em;
+}
+
+#workskin .text + .text,
+#workskin .text + .hiddeninfo + .text {
+  border-top-left-radius: 0.1em;
+}
+
+#workskin .breply + .text,
+#workskin .breply + .hiddeninfo + .text,
+#workskin .text + .breply,
+#workskin .text + .hiddeninfo + .breply {
+  margin-top: 0.75em;
+}
+
+/* Contact names in group chats, and timestamps */
+#workskin .time,
+#workskin .grouptext {
+  padding: 0.75em 1em;
+  font-size: 0.75em;
+  line-height: 0.75em;
+  display: block;
+  clear: both;
+}
+
+#workskin .time {
+  margin: 0.5em auto;
+  text-align: center;
+}
+
+#workskin .grouptext {
+  margin: 0 auto;
+  margin-left: 0;
+  padding-bottom: 0.5em;
+  text-align: left;
+}
+
+#workskin .grouptext > strong {
+  font-weight: normal;
+}
+
+#workskin .time + .grouptext {
+  padding-top: 0;
+}
+
+/* Use to visually check on hiddeninfo */
+#workskin .xhiddeninfo {
+    outline: 1px ridge #ff0000;
+    clear: both;
+    text-align: center;
+  }
+
+/* Hide text visually, but not from screen readers. */
+/* This is copied from here: https://github.com/angular/components/blob/main/src/cdk/a11y/_index.scss#L4C3-L35C4 */
+#workskin .hiddeninfo {
+  border: 0;
+  clip: rect(0 0 0 0);
+  height: 1px;
+  margin: -1px;
+  overflow: hidden;
+  padding: 0;
+  position: absolute;
+  width: 1px;
+
+  /* This works around a Chrome bug that can cause the tab to crash when large amounts of
+   * non-English text get wrapped: https://bugs.chromium.org/p/chromium/issues/detail?id=1201444 */
+  white-space: nowrap;
+
+  /* Avoid browsers rendering the focus ring in some cases. */
+  outline: 0;
+
+  /* Avoid some cases where the browser will still render the native controls (see #9049). */
+  -webkit-appearance: none;
+  -moz-appearance: none;
+
+  /* We need at least one of top/bottom/left/right in order to prevent cases where the
+   * absolute-positioned element is pushed down and can affect scrolling (see #24597).
+   * `left` was chosen here, because it's the least likely to break overrides where the
+   * element might have been positioned (e.g. `mat-checkbox`). */
+  left: 0;
+}

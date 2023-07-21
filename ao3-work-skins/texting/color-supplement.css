@@ -1,0 +1,30 @@
+#workskin .phone .red {
+  outline-color: #ed665b;
+}
+
+/* Potentially avoid using this orange with red or yellow as
+ * the orange is close to the yellow with Reversi (dark mode)
+ * or close to the red with default AO3 (light mode) */
+#workskin .phone .orange {
+  outline-color: #faa03e;
+}
+
+#workskin .phone .yellow {
+  outline-color: #fcc934;
+}
+
+#workskin .phone .green {
+  outline-color: #5bb974;
+}
+
+#workskin .phone .lightblue {
+  outline-color: #4ecde6;
+}
+
+#workskin .phone .purple {
+  outline-color: #af5cf7;
+}
+
+#workskin .phone .pink {
+  outline-color: #ff63b8;
+}
