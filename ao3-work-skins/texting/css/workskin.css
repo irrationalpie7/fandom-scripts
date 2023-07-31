@@ -1,6 +1,5 @@
 /* Note: text between pairs of /* will disappear when you save your workskin.
  * It's just there to provide explanation. */
-
 #workskin {
   position: relative;
 }
@@ -15,21 +14,18 @@
   border: 2px ridge #aaa;
   padding: 0;
   display: table;
-  overflow-wrap: break-word;
-  hyphens: auto;
+  overflow-wrap: anywhere;
 }
 
 /* Group chat or contact name */
 #workskin .phoneheader {
   border-bottom: 2px ridge #b2b2b2;
   font-weight: bold;
-  padding-bottom: 0.5em;
-  padding-top: 0.5em;
+  padding: 0.5em;
   margin: 0;
   text-align: center;
   display: block;
-  overflow-wrap: break-word;
-  hyphens: auto;
+  overflow-wrap: anywhere;
   /* Respecify font since headers may specify different font */
   font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
@@ -43,32 +39,37 @@
   max-width: 75%;
   clear: both;
   position: relative;
-  overflow-wrap: break-word;
-  hyphens: auto;
+  overflow-wrap: anywhere;
 }
 
 #workskin .text {
   float: left;
   border-bottom-left-radius: 0.1em;
   outline: 2px ridge #c5c5ca;
+  margin-right: 1em;
 }
 
 #workskin .breply {
   float: right;
   border-bottom-right-radius: 0.1em;
   outline: 2px ridge #1289fe;
+  margin-left: 1em;
 }
 
 /* Adjustments for texts/breplies that follow each other */
 #workskin .breply + .breply:not(.new),
-#workskin .breply + .hiddeninfo + .breply:not(.new) {
-  margin-top: -0.6em;
+#workskin .breply + .hiddeninfo + .breply:not(.new),
+#workskin .new:not(.text) + .breplay:not(.new),
+#workskin .new:not(.text) + .hiddeninfo + .breplay:not(.new) {
+  margin-top: -0.55em;
   border-top-right-radius: 0.1em;
 }
 
 #workskin .text + .text:not(.new),
-#workskin .text + .hiddeninfo + .text:not(.new) {
-  margin-top: -0.6em;
+#workskin .text + .hiddeninfo + .text:not(.new),
+#workskin .new:not(.breply) + .text:not(.new),
+#workskin .new:not(.breply) + .hiddeninfo + .text:not(.new) {
+  margin-top: -0.55em;
   border-top-left-radius: 0.1em;
 }
 
@@ -88,9 +89,16 @@
 }
 
 #workskin .grouptext {
-  text-align: left;
+  float: left;
   padding-left: 0.5em;
   margin-bottom: -1.1em;
+}
+
+#workskin .grouptext + br,
+#workskin .grouptext + * > br:only-child,
+#workskin .hiddeninfo + br,
+#workskin .hiddeninfo + * > br:only-child {
+  display: none;
 }
 
 #workskin .grouptext > strong {
