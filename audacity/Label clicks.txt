@@ -1,0 +1,4 @@
+AddLabelsBelow:Use_Preset="<Factory Defaults>"
+LabelSounds:Use_Preset="User Preset:point"
+AddLabelsBelow:Use_Preset="<Factory Defaults>"
+LabelSounds:Use_Preset="User Preset:region"

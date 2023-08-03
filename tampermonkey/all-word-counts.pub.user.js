@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         AO3 all-chapter word counts
-// @version      1.0
+// @version      1.1
 // @description  Add chapter word counts on a work's full-page index
 // @author       irrationalpie7
 // @match        https://archiveofourown.org/works/*/navigate*
@@ -35,7 +35,8 @@
     chapters.forEach((chapterEl, i) => {
       if (chapterLengths[i] >= 0) {
         const wordCountEl =
-            window.document.createElement('span', {class: 'words'});
+            window.document.createElement('span');
+        wordCountEl.classList.add('chapter-words');
         wordCountEl.textContent = '(Words: ' +
             chapterLengths[i].toLocaleString(
                 (navigator.languages && navigator.languages.length) ?

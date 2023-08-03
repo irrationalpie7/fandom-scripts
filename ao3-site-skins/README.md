@@ -25,11 +25,38 @@ If you add these lines to a site skin, they will force works to be at most 500px
 
 Note: even though the code says "workskin" in it, this is intended to be used as or added to a *site* skin.
 
-## Force bigger font but only on mobile
-`font-bigger-mobile-only.css` has some custom tweaks I made to get ao3's font a little larger on my phone.
+## Mobile zoom tweaks
+`mobile-zoom-tweaks.css` has some custom tweaks I made to get ao3 looking a little better on my phone. The broad goal was to decrease font sizes that were too large after applying chrome's zoom setting, make buttons a little more condensed, and rearranging some things to make certain fields (like work title and author(s) within a work blurb, or commenter name within a comment heading) wider. I tried to add comments to the file to make it a good starting point if you try it out and realize that you need to change some values.
 
-To get it to apply on only your phone, you will need to pick "only screen and (max-width: 42em)" from the "Media:" list in the "Advanced" section of the site skin editor. If you would like to use it with another skin that applies to both phone and desktop, you will need to make this one as a separate skin, and then either (a) add it as a parent of the other skin or (b) make a new skin that has both this skin and your other skin as its parents, and use the new skin.
+To get this skin to apply only on your phone, you will need to pick "only screen and (max-width: 42em)" from the "Media:" list in the "Advanced" section of the site skin editor. If you would like to use it with another skin that applies to both phone and desktop, you will need to make this one as a separate skin, and then either (a) add it as a parent of the other skin or (b) make a new skin that has both this skin and your other skin as its parents, and use the new skin.
 
-It is very specific to my current phone and also chrome on android, so I'm not sure it's even useful to anyone else, but at least this way I have it saved for myself.
+In case you're curious how comparable my setup is to yours:
+ - I use Chrome on Android, and I turned the [enable-accessibility-page-zoom flag](https://www.androidheadlines.com/2021/10/google-page-zoom-accessibility-feature-chrome-android.html) on, and then went into Chrome's accessibility settings and set the zoom to 125% (just made this change recently so that's what prompted the new skin)
+ - My phone resolution is allegedly 1080 x 2300 pixels
+ - In the accessibility settings on my phone, for "Font size" I have "Large" and for "Display Size" I have "Default" (not sure if this matters, but it might)
 
-Off-topic but I'm fairly certain there is some sort of bug in how mobile chrome decide the font size on certain elements, because for example sometimes the relationship tags on a work page are smaller than the other tags for literally no reason. The text of a work will also sometimes show much larger than usual for a second when the page first loads. This skin *does not fix this issue*, just fights with it in weird ways sometimes.
+## Make menu dropdowns narrower
+
+Normally menu dropdowns (e.g. the one under "Hi Username!") are rather wide, which can cause the text to be hidden off-screen on mobile. This snippet, added to a site skin, will limit dropdowns to the text width instead. If you wish to only apply this on mobile, pick "only screen and (max-width: 42em)" from the "Media:" list in the "Advanced" section of the site skin editor. If you want other things in your site skin to apply on both mobile and desktop, one skin will need to be set as the parent of the other so that the two skins can have different media settings.
+
+```
+#header .menu {
+  width: unset;
+}
+```
+
+## Reversi correction
+
+To use this site skin, create a new site skin with the contents of `reversi-corrected.css` as the css, and set the public "Reversi" skin as the parent.
+
+The intention of this skin is to fix a bug in the Reversi skin: with the original Reversi skin, when you hover over links that you've previously visited they often have black text on a dark background and thus look pretty much invisible. This skin attempts to preserve everything about Reversi except to make that text stay gray instead of going black.
+
+If you're still seeing black text where you shouldn't, or text that should be black is now gray, let me know specifically where you see that happening and I can try to fix it!
+
+## Red-tinted Reversi
+
+This is based on the public [Reversi](https://archiveofourown.org/skins/929) site skin, but it has red/orange accents rather than blue. Use the css in `reversi-replacement.css` if you would like to try it out. It's supposed to be a full replacement of reversi, but I personally set "Reversi" as its parent skin just in case, as falling through to Reversi if something is unspecified is probably going to look better than falling through to the regular archive skin.
+
+I believe this skin includes the reversi correction above, but it's been a while.
+
+![image](reversi-replacement.png)

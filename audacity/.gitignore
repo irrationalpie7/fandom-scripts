@@ -1,0 +1,5 @@
+*.aup3
+*.aup3-wal
+not-mine/*
+out/*
+scratch/*
