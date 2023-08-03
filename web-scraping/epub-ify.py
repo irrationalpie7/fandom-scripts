@@ -103,7 +103,6 @@ def generate(html_files, novelname, author, chapter_s, chapter_e):
 
 
 print('Usage:\npython epub-ify.py "folder/" "title" "author"\n')
-print("You shouldn't need to zero-pad, but who knows.")
 
 folder = sys.argv[1]
 title = sys.argv[2]

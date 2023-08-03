@@ -88,16 +88,6 @@ class WebnovelDownloader(object):
       file.write(f"<body>\n<h1>{title}</h1>\n{content}\n</body>\n</html>")
 
 
-# table of contents:
-# https://novelfull.com/reincarnation-of-the-strongest-sword-god.html
-# https://novelfull.com/reincarnation-of-the-strongest-sword-god.html?page=2
-# ...
-# https://novelfull.com/reincarnation-of-the-strongest-sword-god.html?page=64
-# "a" descendents of "list-chapter" will contain links to chapters
-#
-# per chapter:
-# title: .chapter-title
-# content: #chapter-content
 class ParameterizedDownloader(WebnovelDownloader):
   # Constructor
   def __init__(self, toc_url:str, toc_selector:str, chapter_text_selector:str, include_toc:bool):
