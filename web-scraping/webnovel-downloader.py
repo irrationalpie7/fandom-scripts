@@ -98,6 +98,49 @@ class WebnovelDownloader(object):
 # per chapter:
 # title: .chapter-title
 # content: #chapter-content
+class ParameterizedDownloader(WebnovelDownloader):
+  # Constructor
+  def __init__(self, toc_url:str, toc_selector:str, chapter_text_selector:str, include_toc:bool):
+    """Encapsulates toc-like downloading options.
+    @toc_url: E.g. https://shanastoryteller.tumblr.com/post/724074957212172288/happy-pride-fem-mxy-wwx-pls
+    @toc_selector: e.g. ".captext a"
+    @chapter_text_selector: e.g. .captext
+    """
+    self.toc_url = toc_url
+    self.toc_selector = toc_selector
+    self.chapter_text_selector = chapter_text_selector
+    self.chapter_urls = []
+    self.chapter_number = 0
+    self.include_toc = include_toc
+
+  def get_chapter_urls(self) -> list[str]:
+    # cache this so we don't need to do num_toc_pages web requests every time
+    if self.chapter_urls == []:
+      self.chapter_urls = get_chapter_urls_from_toc(self.toc_url,self.toc_selector)
+      if self.include_toc:
+         self.chapter_urls = self.chapter_urls + [self.toc_url]
+    return self.chapter_urls
+  
+  def extract_chapter_title(self, chapter_soup):
+    self.chapter_number += 1
+    return f"Chapter {self.chapter_number}"
+  
+  def extract_chapter_content(self, chapter_soup, chapter_url:str):
+    content = '\n'.join(
+        f"{clean(x, chapter_url).prettify()}" for x in chapter_soup.select(self.chapter_text_selector, limit=1))
+    return content
+   
+
+# table of contents:
+# https://novelfull.com/reincarnation-of-the-strongest-sword-god.html
+# https://novelfull.com/reincarnation-of-the-strongest-sword-god.html?page=2
+# ...
+# https://novelfull.com/reincarnation-of-the-strongest-sword-god.html?page=64
+# "a" descendents of "list-chapter" will contain links to chapters
+#
+# per chapter:
+# title: .chapter-title
+# content: #chapter-content
 class NovelfullDownloader(WebnovelDownloader):
   # Constructor
   def __init__(self, toc_url:str, num_toc_pages:int):
@@ -251,6 +294,8 @@ if "www.wuxiaworld.eu" in url:
    downloader = WuxiaWorldEuDownloader(url,num)
 elif "novelfull.com" in url:
    downloader = NovelfullDownloader(url,num)
+elif "tumblr" in url:
+   downloader = ParameterizedDownloader(url,".captext a",".captext",True)
 else:
    print("unsupported url host; please implement a WebnovelDownloader to handle parsing")
 if downloader is not None:
