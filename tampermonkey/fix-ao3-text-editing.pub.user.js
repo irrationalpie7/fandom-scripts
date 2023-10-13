@@ -3,7 +3,7 @@
 // @namespace   irrationalpie scripts
 // @match       https://archiveofourown.org/works/*
 // @grant       none
-// @version     1.1
+// @version     1.2
 // @author      irrationalpie
 // @updateURL   https://github.com/irrationalpie7/fandom-scripts/raw/main/tampermonkey/fix-ao3-text-editing.pub.user.js
 // @downloadURL https://github.com/irrationalpie7/fandom-scripts/raw/main/tampermonkey/fix-ao3-text-editing.pub.user.js
@@ -14,7 +14,9 @@ doTheThing();
 
 function doTheThing() {
   // only operate on new work or edit work page
-  const main = document.querySelector("#main.works-new, #main.works-edit");
+  const main = document.querySelector(
+    "#main.works-new, #main.works-edit, #main.chapters-edit"
+  );
   if (main === null) {
     return;
   }
@@ -55,9 +57,26 @@ function cleanTextArea(textarea) {
   }
 }
 
+function findPostButtonSet() {
+  const try1 = document.querySelector("fieldset.create");
+  if (try1 !== null) {
+    return try1;
+  }
+  const preview = document.querySelector('input[value="Preview"]');
+  if (preview === null) {
+    return null;
+  }
+  let parent = preview.parentElement;
+  while (parent.tagName.toLowerCase() !== "fieldset") {
+    parent = parent.parentElement;
+  }
+  return parent;
+}
+
 function createWarning() {
-  const postButtonSet = document.querySelector("fieldset.create");
+  const postButtonSet = findPostButtonSet();
   if (postButtonSet === null) {
+    const preview = document.querySelector('input[value="Preview"]');
     // couldn't find a place to put the warning
     console.log("'Fix AO3 text editing' unable to display warning");
   }
