@@ -3,7 +3,7 @@
 // @namespace   irrationalpie scripts
 // @match       https://archiveofourown.org/works/*
 // @grant       none
-// @version     1.0
+// @version     1.01
 // @author      irrationalpie
 // @updateURL   https://github.com/irrationalpie7/fandom-scripts/raw/main/tampermonkey/fix-ao3-text-editing.pub.user.js
 // @downloadURL https://github.com/irrationalpie7/fandom-scripts/raw/main/tampermonkey/fix-ao3-text-editing.pub.user.js
@@ -20,7 +20,7 @@ function doTheThing() {
   }
 
   /** @type {HTMLTextAreaElement[]} */
-  const textareas = Array.from(document.querySelectorAll());
+  const textareas = Array.from(document.querySelectorAll("textarea"));
 
   if (textareas.length === 0) {
     console.log("'Fix AO3 text editing' found no text areas, aborting.");
