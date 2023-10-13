@@ -31,6 +31,15 @@ The [Unglitchify text user script (install)](https://github.com/irrationalpie7/f
 2. This user script will run on all ao3 pages when it is enabled, and particularly for long stories the page might freeze while this runs, so it may make sense to keep this particular user script disabled except when you come across a story which requires it.
 3. This user script does not leave any indication that it has modified the page, so if the presence/absence of glitchy characters was being used to encode some sort of meaning, you will miss out on that.
 
+## Fix AO3 text editing
+You can [install the Fix AO3 text editing](https://github.com/irrationalpie7/fandom-scripts/raw/main/tampermonkey/fix-ao3-text-editing.pub.user.js) script here. It attempts to fix ao3 text boxes on the edit work page when ao3 messes up your spacing. Current changes:
+
+1. Empty paragraph tags (or those with only spaces inside) will be replaced with a regular new line
+2. Any more than two empty lines in a row will be reduced to just two new lines (lines with just spaces count as empty for this purpose)
+3. Certain special characters (non-breaking space, word join) will be replaced with their html codes (`&nbsp;`, etc), because otherwise AO3 will strip them when you post (at least, that was the behavior I thought I observed as of Oct 13, '23).
+
+Feel free to let me know if you have suggestions for improvement!
+
 ## Smooth scrolling
 
 This extension slowly scrolls ao3 as you read. Use ctrl+x to scroll slowly, then slightly faster, then turn scrolling back off. I've tried to use comments to indicate how you could customize the shortcut and/or scrolling speeds if you have different preferences. [Install smooth scrolling](https://github.com/irrationalpie7/fandom-scripts/raw/main/tampermonkey/smooth-scrolling.pub.user.js).
