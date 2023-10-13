@@ -3,7 +3,7 @@
 // @namespace   irrationalpie scripts
 // @match       https://archiveofourown.org/works/*
 // @grant       none
-// @version     1.01
+// @version     1.1
 // @author      irrationalpie
 // @updateURL   https://github.com/irrationalpie7/fandom-scripts/raw/main/tampermonkey/fix-ao3-text-editing.pub.user.js
 // @downloadURL https://github.com/irrationalpie7/fandom-scripts/raw/main/tampermonkey/fix-ao3-text-editing.pub.user.js
@@ -45,7 +45,9 @@ function cleanTextArea(textarea) {
   // non-breaking space
   newValue = newValue.replaceAll(/ /g, "&nbsp;");
   // remove empty paragraphs
-  newValue = newValue.replaceAll(/<p> *<\/p>/g, "");
+  newValue = newValue.replaceAll(/<p> *<\/p>/g, "\n\n");
+  // remove ao3's special empty paragraphs
+  newValue = newValue.replaceAll(/\n\n&nbsp;\n\n/g, "\n\n");
   // limit excessive new lines
   newValue = newValue.replaceAll(/\n( *\n)+/g, "\n\n");
   if (newValue !== textarea.value) {
