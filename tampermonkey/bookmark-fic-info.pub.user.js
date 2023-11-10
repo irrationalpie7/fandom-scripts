@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         AO3 Bookmark info autofill
-// @version      0.1
+// @version      0.2
 // @description  Automatically add work info to the ao3 bookmark form whenever it is opened.
 // @author       irrationalpie7
 // @match        https://archiveofourown.org/*
@@ -10,7 +10,9 @@
 // @grant        none
 // ==/UserScript==
 
-// following two are similar, check first *then* second if failed first
+/* javascript: (() => { */
+
+/* following two are similar, check first *then* second if failed first */
 const work_bookmarks_url =
   /https:\/\/archiveofourown\.org\/works\/\d+\/bookmarks/;
 const work_url =
@@ -19,50 +21,59 @@ const series_url = /https:\/\/archiveofourown\.org\/series\/\d+/;
 const bookmark_form_url =
   /https:\/\/archiveofourown\.org\/bookmarks\/\d+\/edit/;
 
-function autopopulate_wordcount() {
-  if (this === window) {
-    return; // Don't know why, but the id selector also returns window?
+function autopopulateWorkInfo(bookmarkForm) {
+  if (bookmarkForm === window) {
+    return; /* Don't know why, but the id selector also returns window? */
   }
+  const href = window.location.href;
   if (href.match(bookmark_form_url)) {
-    // Dedicated bookmark edit page, work info not accessable
+    /* Dedicated bookmark edit page, work info not accessable */
     return;
   }
 
-  let dds = $(this).find("fieldset > fieldset > dl > dd");
-  let tag_dd = dds[1];
-  let tag_list = $(tag_dd).children("ul");
-
-  let tag_input = $(this).find("[id=bookmark_tag_string_autocomplete]");
-  tag_input = tag_input[0]; // get actual DOM node
-
-  // what page is this? can we find the work info?
-  let href = window.location.href;
+  /* what page is this? can we find the work info? */
   let title = null;
+  let titleText = null;
   let authors = null;
   if (!href.match(work_bookmarks_url) && href.match(work_url)) {
-    title = `<a href="${href}">${$(".title.heading")[0].textContent}</a>`;
-    authors = getAuthors($(".byline.heading")[0].find('a[rel="author"]'));
+    titleText = document.querySelector(".title.heading").textContent.trim();
+    title = `<a href="${href}">${titleText}</a>`;
+    authors = getAuthors(
+      document.querySelector(".byline.heading"),
+      'a[rel="author"]'
+    );
   } else if (href.match(series_url)) {
-    title = `<a href=${href}>${$(
-      "#main h2.heading"
-    )[0].textContent.trim()}</a>`;
-    authors = getAuthors($('.series.meta.group a[rel="author"]'));
+    titleText = document.querySelector("#main h2.heading").textContent.trim();
+    title = `<a href=${href}>${titleText}</a>`;
+    authors = getAuthors(document, '.series.meta.group a[rel="author"]');
   } else {
-    // All other pages have the bookmark form nested within a bookmark article
-    let bookmark_article = $(this).closest("li.bookmark[role=article]");
+    /* Most other pages have the bookmark form nested within a bookmark article */
+    let bookmarkArticle = bookmarkForm.closest("li.bookmark[role=article]");
+    /* If that didn't work, but there's exactly one bookmark on the page, fall back to that. */
+    if (bookmarkArticle === null) {
+      const bookmarks = document.querySelectorAll(
+        "li.work[role=article], li.series[role=article]"
+      );
+      if (bookmarks.length !== 1) {
+        /* Still couldn't find the bookmark article, so give up */
+        return;
+      }
+      bookmarkArticle = bookmarks[0];
+    }
 
-    title = $(
-      'h4.heading a[href*="/works/"], h4.heading a[href*="/series/"]',
-      bookmark_article
-    )[0].outerHTML;
-    authors = getAuthors($('h4.heading a[rel="author"]', bookmark_article));
+    const titleElement = bookmarkArticle.querySelector(
+      'h4.heading a[href*="/works/"], h4.heading a[href*="/series/"]'
+    );
+    titleText = titleElement.textContent;
+    title = titleElement.outerHTML;
+    authors = getAuthors(bookmarkArticle, 'h4.heading a[rel="author"]');
   }
 
-  let workInfo = `${title}\nby ${authors}`;
+  const workInfo = `${title}\nby ${authors}`;
 
-  let textArea = $(this).find("textarea")[0];
+  const textArea = bookmarkForm.querySelector("textarea");
 
-  if (!textArea.value.includes(workInfo)) {
+  if (!textArea.value.includes(titleText + "</a>")) {
     if (textArea.value === "") {
       textArea.value = workInfo;
     } else {
@@ -71,18 +82,17 @@ function autopopulate_wordcount() {
   }
 }
 
-function getAuthors(authors) {
+function getAuthors(parent, authorSelector) {
+  const authors = parent.querySelectorAll(authorSelector);
   if (authors.length === 0) {
     return "Anonymous";
   }
   return Array.from(authors)
     .map((a) => a.outerHTML)
-    .join();
+    .join(", ");
 }
 
-function set_context(j_node) {
-  autopopulate_wordcount.call(j_node);
-}
+/* autopopulateWorkInfo(document.querySelector("#bookmark-form"));})(); */
 
 function waitForKeyElements(
   selectorTxt /* Required: The jQuery selector string that
@@ -112,13 +122,13 @@ function waitForKeyElements(
         */
     targetNodes.each(function () {
       var jThis = $(this);
-      var alreadyFound = jThis.data("alreadyFound") || false;
+      var alreadyFound = jThis.data("alreadyFound2") || false;
 
       if (!alreadyFound) {
         //--- Call the payload function.
-        var cancelFound = actionFunction(jThis);
+        var cancelFound = actionFunction(jThis[0]);
         if (cancelFound) btargetsFound = false;
-        else jThis.data("alreadyFound", true);
+        else jThis.data("alreadyFound2", true);
       }
     });
   } else {
@@ -155,6 +165,6 @@ function waitForKeyElements(
 // $("[id='idofelement']") due to multiple elements with same id being possible on ao3 bookmark page
 waitForKeyElements(
   "[id='bookmark-form']",
-  set_context,
+  autopopulateWorkInfo,
   false /*false = continue searching after first*/
 );
