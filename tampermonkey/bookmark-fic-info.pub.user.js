@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         AO3 Bookmark info autofill
-// @version      0.2
+// @version      1.0
 // @description  Automatically add work info to the ao3 bookmark form whenever it is opened.
 // @author       irrationalpie7
 // @match        https://archiveofourown.org/*
