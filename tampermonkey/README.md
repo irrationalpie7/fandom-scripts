@@ -21,6 +21,20 @@ After installing the extension, it will instead look something like this, where 
 
 The script may take a moment to load, since it has to fetch the content of the full-work page so that it can count the number of words in each chapter. This will not necessarily match AO3's word counts precisely. I'm using [this word counting implementation](https://github.com/byn9826/words-count), though the version I'm using may not be 100% up-to-date.
 
+## Bookmark fic info
+
+The [Bookmark fic info user script (install)](https://github.com/irrationalpie7/fandom-scripts/raw/main/tampermonkey/bookmark-fic-info.pub.user.js) automatically includes links to a work or series title as well as author(s) when creating or updating an AO3 bookmark. This should work any time there's any sort of blurb-style info about the work on the page (though if it's an anonymous work, it'll list the author as "Anonymous" without a link). I'm not sure about mystery works, I didn't have one handy to test.
+
+If there's already text in the AO3 bookmark, it'll append the title/author info to the end of an existing bookmark. In order to not do that again each time you edit your ao3 bookmark, it won't do that if the bookmark already contains a link with the title.
+
+If you would like to use this as a bookmarklet rather than installing it as a userscript:
+1. Copy everything starting at the line that goes `/* javascript: (() => { */` (currently line 13) to the line that goes `/* autopopulateWorkInfo(document.querySelector("#bookmark-form"));})(); */` (currently line 95), inclusive, into a file
+2. Remove the `/*` and `*/` from *only the new first and last lines mentioned in step 1*
+3. Copy the whole thing into the url for the bookmarklet
+4. Use the bookmarklet once you've got the create/edit bookmark form open
+
+I found this source helpful in [understanding bookmarklets](https://www.freecodecamp.org/news/what-are-bookmarklets/), though note that it is aimed at writing them rather than using them.
+
 ## Unglitchify text
 
 The [Unglitchify text user script (install)](https://github.com/irrationalpie7/fandom-scripts/raw/main/tampermonkey/unglitchify.pub.user.js) cleans up glitchy characters from text on ao3. This is specifically referring to text like "P̶̳̘̗̚͜r̸̬̤͝o̷̱̖̰̐̽̀t̴͍̲̦̞̀́͝e̷̹̥̭̦͌c̶̘̣̲͂̒̐͝ͅt̶̥͎̅" ("Protect"). The implementation is inspired by this [other online tool to remove glitchy text](https://cable.ayra.ch/zalgo/).
