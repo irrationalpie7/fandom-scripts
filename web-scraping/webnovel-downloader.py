@@ -21,6 +21,7 @@ class Chapter(object):
             self.soup = get_soup(self.url)
         return self.soup
 
+
 def set_chapter_titles_by_index(chapters: list[Chapter]):
     for i, chapter in enumerate(chapters):
         chapter.title = f"Chapter {i}"
@@ -115,7 +116,7 @@ class WebnovelDownloader(object):
 
 class ParameterizedDownloader(WebnovelDownloader):
     # Constructor
-    def __init__(self, toc_url: str, toc_selector: str, chapter_text_selector: str, chapter_parent_selector: str, include_toc: bool):
+    def __init__(self, toc_url: str, toc_selector: str, chapter_text_selector: str, chapter_parent_selector: str, include_toc: bool, number_chapters: bool):
         """Encapsulates toc-like downloading options.
         @toc_url: E.g. https://shanastoryteller.tumblr.com/post/724074957212172288/happy-pride-fem-mxy-wwx-pls
         @toc_selector: e.g. ".captext a"
@@ -128,6 +129,8 @@ class ParameterizedDownloader(WebnovelDownloader):
         self.chapter_urls = []
         self.chapter_number = 0
         self.include_toc = include_toc
+        self.number_chapters = number_chapters
+        self.chapter_titles = []
 
     def get_chapter_urls(self) -> list[str]:
         # cache this so we don't need to do num_toc_pages web requests every time
@@ -140,7 +143,14 @@ class ParameterizedDownloader(WebnovelDownloader):
 
     def extract_chapter_title(self, chapter_soup):
         self.chapter_number += 1
-        return f"Chapter {self.chapter_number}"
+        if self.chapter_titles == [] and not self.number_chapters:
+            self.chapter_titles = get_chapter_titles_from_toc(
+                self.toc_url, self.toc_selector)
+
+        if self.number_chapters or self.chapter_number >= len(self.chapter_titles):
+            return f"Chapter {self.chapter_number}"
+        else:
+            return self.chapter_titles[self.chapter_number-1]
 
     def extract_chapter_content(self, chapter_soup, chapter_url: str):
         content = '\n'.join(
@@ -246,13 +256,18 @@ def canonical(orig_url: str, relative_url: str) -> str:
 
 
 def get_soup(url: str) -> BeautifulSoup:
-    # this sets a non-robot user agent so we don't get blocked
-    user_agent = 'Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.9.0.7) Gecko/2009021910 Firefox/3.0.7'
-    headers = {'User-Agent': user_agent, }
-    request = urllib.request.Request(
-        url, None, headers)  # The assembled request
-    response = urllib.request.urlopen(request)
-    return BeautifulSoup(response.read(), "lxml")
+    if url.startswith("http"):
+        # this sets a non-robot user agent so we don't get blocked
+        user_agent = 'Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.9.0.7) Gecko/2009021910 Firefox/3.0.7'
+        headers = {'User-Agent': user_agent, }
+        request = urllib.request.Request(
+            url, None, headers)  # The assembled request
+        response = urllib.request.urlopen(request)
+        return BeautifulSoup(response.read(), "lxml")
+    else:
+        with open(url) as file:
+            soup = BeautifulSoup(file, "lxml")
+            return soup
 
 
 def remove_style_attribute(element):
@@ -292,6 +307,11 @@ def clean(content, orig_url):
     return content
 
 
+def get_chapter_titles_from_toc(toc_url: str, chapter_url_selector: str) -> list[str]:
+    soup = get_soup(toc_url)
+    return [x.get_text(strip=True) for x in soup.select(chapter_url_selector)]
+
+
 def get_chapter_urls_from_toc(toc_url: str, chapter_url_selector: str) -> list[str]:
     soup = get_soup(toc_url)
     return [canonical(toc_url, x["href"]) for x in soup.select(chapter_url_selector)]
@@ -299,10 +319,10 @@ def get_chapter_urls_from_toc(toc_url: str, chapter_url_selector: str) -> list[s
 
 print('Usage:\npython webnovel-downloader.py <url> <number of chapters/toc pages; defaults to 1> <num chapters to download; defaults to 1; set to "all" to override>\n')
 url = sys.argv[1]
-if not url.startswith("http"):
-    sys.exit()
-else:
-    print(f"Fetching novel from: {url}")
+# if not url.startswith("http"):
+#    sys.exit()
+# else:
+print(f"Fetching novel from: {url}")
 
 num = 1
 if len(sys.argv) >= 3:
@@ -324,7 +344,10 @@ elif "novelfull.com" in url:
     downloader = NovelfullDownloader(url, num)
 elif "tumblr" in url:
     downloader = ParameterizedDownloader(
-        url, ".captext a", ".captext", "li.caption", True)
+        url, ".captext a", ".captext", "li.caption", True, True)
+elif not "http" in url:
+    downloader = ParameterizedDownloader(
+        url.split("@")[0], f".{url.split('@')[1]} a", ".captext", "li.caption", False, False)
 else:
     print("unsupported url host; please implement a WebnovelDownloader to handle parsing")
 if downloader is not None:
