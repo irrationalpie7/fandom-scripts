@@ -12,9 +12,11 @@
   font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
   margin: 1em auto;
   border: 2px ridge #aaa;
-  padding: 0;
+  /* top, right, bottom, left */
+  padding: 0 .5em 1em .5em;
   display: table;
   overflow-wrap: anywhere;
+  box-sizing: border-box;
 }
 
 /* Group chat or contact name */
@@ -22,7 +24,8 @@
   border-bottom: 2px ridge #b2b2b2;
   font-weight: bold;
   padding: 0.5em;
-  margin: 0;
+  /* top/bottom left/right */
+  margin: 0 -0.5em;
   text-align: center;
   display: block;
   overflow-wrap: anywhere;
@@ -33,7 +36,8 @@
 /* Chat bubbles (text on left, breply on right) */
 #workskin .text,
 #workskin .breply {
-  margin: 1em 0.5em;
+  /* top, right, bottom, left */
+  margin: 0 0 .5em 0;
   border-radius: 1em;
   padding: 0.5em 1em;
   max-width: 75%;
@@ -45,6 +49,7 @@
 #workskin .text {
   float: left;
   border-bottom-left-radius: 0.1em;
+  border-top-left-radius: 0.1em;
   outline: 2px ridge #c5c5ca;
   margin-right: 1em;
 }
@@ -52,25 +57,28 @@
 #workskin .breply {
   float: right;
   border-bottom-right-radius: 0.1em;
+  border-top-right-radius: 0.1em;
   outline: 2px ridge #1289fe;
   margin-left: 1em;
 }
 
-/* Adjustments for texts/breplies that follow each other */
-#workskin .breply + .breply:not(.new),
-#workskin .breply + .hiddeninfo + .breply:not(.new),
-#workskin .new:not(.text) + .breplay:not(.new),
-#workskin .new:not(.text) + .hiddeninfo + .breplay:not(.new) {
-  margin-top: -0.55em;
-  border-top-right-radius: 0.1em;
+/* Note: ao3's css parser gets a little confused by the commas in the :is() selector,
+ * but it should still work! */
+#workskin .new.breply,
+#workskin :is(.text, .phoneheader, .time) + .breply,
+#workskin :is(.text, .phoneheader, .time) + .hiddeninfo + .breply,
+/* Special comment format that ao3 won't strip (note: comment must not contain commas)*/
+#workskin bogus[comment="ao3's css parser gets a little confused by the :is() selector but though the result looks different it should still work"] {
+  margin-top: 1em;
+  border-top-right-radius: 1em;
 }
 
-#workskin .text + .text:not(.new),
-#workskin .text + .hiddeninfo + .text:not(.new),
-#workskin .new:not(.breply) + .text:not(.new),
-#workskin .new:not(.breply) + .hiddeninfo + .text:not(.new) {
-  margin-top: -0.55em;
-  border-top-left-radius: 0.1em;
+#workskin .new.text,
+#workskin :is(.breply, .phoneheader, .time) + .text,
+#workskin :is(.breply, .phoneheader, .time) + .hiddeninfo + .text,
+#workskin .grouptext + .text {
+  margin-top: 1em;
+  border-top-left-radius: 1em;
 }
 
 /* Contact names in group chats, and timestamps */
@@ -85,13 +93,17 @@
 
 #workskin .time {
   text-align: center;
+  /* Use padding instead of margin to adjust spacing to previous element,
+   * because floats don't play well with margins. */
+  margin-top: 0;
+  padding-top: 1em;
   margin-bottom: 0;
 }
 
 #workskin .grouptext {
   float: left;
-  padding-left: 0.5em;
   margin-bottom: -1.1em;
+  margin-left: .5em;
 }
 
 #workskin .grouptext + br,

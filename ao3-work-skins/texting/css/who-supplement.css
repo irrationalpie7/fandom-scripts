@@ -16,6 +16,7 @@
   display: none;
 }
 
+/* The "c0" and "00" at the end of each of the colors in the "background-image" section specify the transparency; c0 is about 75% visible, 00 is fully transparent. */
 #workskin .phone .text .who {
   border-color: #c5c5ca;
   background-image: linear-gradient(to right, #c5c5cac0 0.5em, #c5c5ca00 1.5em 100%);
