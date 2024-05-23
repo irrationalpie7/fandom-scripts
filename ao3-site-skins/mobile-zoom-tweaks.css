@@ -56,6 +56,10 @@ div.preface {
   line-height: 1.5;
 }
 
+#header li a {
+    font-size: 1.15em;
+}
+
 /* This section adjusts work/bookmark blurb properties to try to make better
  * usage of the space available */
 
@@ -236,4 +240,8 @@ dl.work,
 #workskin h3 {
   max-height: 999999px;
   font-size: 1.5em;
+}
+
+.home .header ul.actions {
+  margin-left: 7em;
 }
