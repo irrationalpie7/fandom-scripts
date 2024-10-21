@@ -1,5 +1,7 @@
 from bs4 import BeautifulSoup, NavigableString
 import urllib.request
+from urllib.error import HTTPError, URLError
+import socket
 import sys
 import re
 import os
@@ -48,7 +50,7 @@ class WebnovelDownloader(object):
         self.url_batch_size = url_batch_size
         # TODO: setup download dir
         self.file_dir = "chapters"
-        i = 4
+        i = 1
         while os.path.exists(f"{self.file_dir}-{i}"):
             i += 1
         self.file_dir = f"{self.file_dir}-{i}"
@@ -112,6 +114,8 @@ class WebnovelDownloader(object):
             file.write(f"<head>\n<title>{title}</title>\n</head>\n")
             file.write(
                 f"<body>\n<h1>{title}</h1>\n{content}\n</body>\n</html>")
+
+        print(".", end=" ")
 
 
 class ParameterizedDownloader(WebnovelDownloader):
@@ -258,12 +262,26 @@ def canonical(orig_url: str, relative_url: str) -> str:
 def get_soup(url: str) -> BeautifulSoup:
     if url.startswith("http"):
         # this sets a non-robot user agent so we don't get blocked
-        user_agent = 'Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.9.0.7) Gecko/2009021910 Firefox/3.0.7'
-        headers = {'User-Agent': user_agent, }
+        user_agent = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.2 Safari/605.1.15'
+        headers = {'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9',
+                   'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/103.0.0.0 Safari/537.36'}
         request = urllib.request.Request(
             url, None, headers)  # The assembled request
-        response = urllib.request.urlopen(request)
+        response = urllib.request.urlopen(request)  # , timeout=20)
         return BeautifulSoup(response.read(), "lxml")
+        # try:
+        #     response = urllib.request.urlopen(request, timeout=60)
+        #     return BeautifulSoup(response.read(), "lxml")
+        # except HTTPError as error:
+        #     print(
+        #         'HTTP Error: Data not retrieved because %s\nURL: %s', error, url)
+        # except URLError as error:
+        #     if isinstance(error.reason, socket.timeout):
+        #         print(
+        #             'Timeout Error: Data not retrieved because %s\nURL: %s', error, url)
+        #     else:
+        #         print(
+        #             'URL Error: Data not retrieved because %s\nURL: %s', error, url)
     else:
         with open(url) as file:
             soup = BeautifulSoup(file, "lxml")
@@ -280,8 +298,31 @@ def remove_style_attribute(element):
 
 def clean(content, orig_url):
     # remove ads, scripts, and styles
-    for data in content.select('script, style, .ads, .adsbygoogle'):
+    # , .pagelayer-share_grp'):
+    for data in content.select('script, style, .ads, .adsbygoogle, .pagelayer-image-slider-div, .pagelayer-share_grp, .pagelayer-btn_grp'):
         data.decompose()
+
+    # remove images because we can't save them anyway
+    for data in content.select('img'):
+        if data.has_attr('src'):
+            data['data-orig-src'] = data['src']
+            del data['src']
+        if data.has_attr('srcset'):
+            data['data-orig-src'] = data['srcset']
+            del data['srcset']
+
+    # Novelingua-specific
+    if "novelingua" in orig_url:
+        # remove br because I'm having some problems with it:
+        for linebreak in content.find_all('br'):
+            linebreak.extract()
+        for data in content.select('div'):
+            if data.text.strip().startswith("Check out the"):
+                while data.parent and data.parent.text and data.parent.text.strip().startswith("Check out the"):
+                    data = data.parent
+                # replace data and its contents
+                data.name = "p"
+                data.string = "[Check out other project(s)]"
 
     # remove styles specified as attributes
     remove_style_attribute(content)
@@ -290,7 +331,7 @@ def clean(content, orig_url):
 
     # totally empty filler elements (and their otherwise empty parents)
     # can go bye bye
-    for data in content.select('div, p, span'):
+    for data in content.select('div, p, span, b, i'):
         # (no text or child elements)
         while data.text.strip() == "" and len(data.find_all()) == 0:
             parent = data.parent
@@ -345,9 +386,13 @@ elif "novelfull.com" in url:
 elif "tumblr" in url:
     downloader = ParameterizedDownloader(
         url, ".captext a", ".captext", "li.caption", True, True)
+elif "novelingua" in url:
+    # (self, toc_url: str, toc_selector: str, chapter_text_selector: str, chapter_parent_selector: str, include_toc: bool, number_chapters: bool):
+    downloader = ParameterizedDownloader(
+        url, "#main a", "article", "#main", False, False)
 elif not "http" in url:
     downloader = ParameterizedDownloader(
-        url.split("@")[0], f".{url.split('@')[1]} a", ".captext", "li.caption", False, False)
+        url.split("@")[0], f".{url.split('@')[1]} a", ".captext", "li.caption", True, False)
 else:
     print("unsupported url host; please implement a WebnovelDownloader to handle parsing")
 if downloader is not None:
