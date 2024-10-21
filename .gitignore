@@ -1,3 +1,4 @@
 web-scraping/*/*
+web-scraping/*.html
 *.epub
 ignore*
