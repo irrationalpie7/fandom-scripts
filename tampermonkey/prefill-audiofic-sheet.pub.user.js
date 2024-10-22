@@ -14,14 +14,16 @@
 /* javascript: (() => { /**/
 
 function generateSpreadsheet() {
-  const blurbs = Array.from(documents.querySelectorAll(".blurb"));
+  const blurbs = Array.from(document.querySelectorAll(".blurb"));
   const works = blurbs.map((blurb) => parseBlurb(blurb));
+  console.log(works);
+  console.log(works[0]);
 
   const spreadsheetHeader =
     "*Note: author and text links are merely guesses based on links present in the work summary. Please check that these were detected correctly!\nPodficcer Name(s) (the reader(s) of this podfic)\tWhere should podfic feedback be directed?\tPodfic Title\tFandom(s)\tRelationship(s) (if there are no romantic relationships, just put \"gen\")\tLength of Recording (HH:MM:SS)\tFic author name(s)\tURL of text version (if it's publically available)\tCover Artist\tLanguage\tIs this work part of a series? (give series name/link)\tNotes (eg. tell us if a podfic shouldn't be published until a challenge goes live, etc.)\n";
 
   copyToClipboard(
-    spreadsheetHeader + "\n".join(works.map((w) => printWork(w)))
+    spreadsheetHeader + works.map((w) => printWork(w)).join("\n")
   );
 }
 
@@ -37,49 +39,50 @@ function copyToClipboard(text) {
 
 function parseBlurb(blurb) {
   const work = {};
-  work.podficcers = ", ".join(
-    Array.from(
-      blurb.querySelectorAll("h4 a[rel='author']").map((a) => a.textContent)
-    )
-  );
+  work.podficcers = Array.from(blurb.querySelectorAll("h4 a[rel='author']"))
+    .map((a) => a.textContent)
+    .join(", ");
   work.url = blurb.querySelector("h4 a").href;
   work.title = blurb.querySelector("h4 a").textContent;
-  work.fandoms = ", ".join(
-    Array.from(blurb.querySelectorAll("h5 .fandoms").map((a) => a.textContent))
-  );
-  work.relationships = ", ".join(
-    Array.from(
-      blurb
-        .querySelectorAll("li.relationships")
-        .map((a) => a.textContent)
-        .filter((a) => a.includes("/"))
-    )
-  );
+  work.fandoms = Array.from(blurb.querySelectorAll("h5.fandoms a"))
+    .map((a) => a.textContent)
+    .join(", ");
+  work.relationships = Array.from(blurb.querySelectorAll("li.relationships a"))
+    .map((a) => a.textContent)
+    .filter((a) => a.includes("/"))
+    .join(", ");
   if (work.relationships === "") {
     work.relationships = "gen";
   }
   work.language = blurb.querySelector("dd.language").textContent;
   const links = Array.from(blurb.querySelectorAll("blockquote.summary a"));
-  work.authors = ", ".join(
-    links.filter((a) => a.href.includes("/users/")).map((a) => a.textContent)
-  );
-  work.texts = " ; ".join(
-    links.filter((a) => a.href.includes("/works/")).map((a) => a.href)
-  );
-  work.links = " ; ".join(
-    links
-      .filter((a) => !a.href.includes("/users/") && !a.href.includes("/works/"))
-      .map((a) => `${a.textContent} (${a.href})`)
-  );
-  work.series = ", ".join(
-    Array.from(blurb.querySelectorAll("ul.series li")).map(
-      (a) => `${a.textContent} (${a.href})`
-    )
-  );
+  work.authors = links
+    .filter((a) => a.href.includes("/users/"))
+    .map((a) => a.textContent)
+    .join(", ");
+  work.texts = links
+    .filter((a) => a.href.includes("/works/"))
+    .map((a) => a.href)
+    .join(" ; ");
+  work.links = links
+    .filter((a) => !a.href.includes("/users/") && !a.href.includes("/works/"))
+    .map((a) => `${a.textContent} (${a.href})`)
+    .join(" ; ");
+  work.series = Array.from(blurb.querySelectorAll("ul.series li"))
+    .map((li) => {
+      const a = li.querySelector("a");
+      const num = li.querySelector("strong");
+      return `${a.textContent} [#${num.textContent}] (${a.href})`;
+    })
+    .join(", ");
+  return work;
 }
 
 function printWork(work) {
-  return `${work.podficcers}\t${work.url}\t${work.title}\t${work.fandoms}\t\t${work.authors}\t${work.texts}\t\t${work.language}\t${work.series}\t${work.links}`;
+  return `${work.podficcers}\t${work.url}\t${work.title}\t${work.fandoms}\t${work.relationships}\t\t${work.authors}\t${work.texts}\t\t${work.language}\t${work.series}\t${work.links}`.replaceAll(
+    "\n",
+    ""
+  );
 }
 
 /* generateSpreadsheet();})(); /**/
@@ -91,7 +94,7 @@ function generateGenerateButton() {
   generateButton.textContent =
     "Generate and copy audiofic archive spreadsheet starter";
   generateButton.addEventListener("click", generateSpreadsheet);
-  documents.querySelector("#main").append(generateButton);
+  document.querySelector("#main").append(generateButton);
 }
 
 if (document.querySelectorAll(".blurb").length !== 0) {
