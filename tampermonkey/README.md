@@ -63,7 +63,7 @@ This extension slowly scrolls ao3 as you read. Use ctrl+x to scroll slowly, then
 
 ## Prefill Audiofic Archive Spreadsheet
 
-This script adds a button to the **bottom** of any page that has a bunch of work blurbs on it. If you click it, it will parse the current page and pre-fill a spreadsheet in the format the audiofic archive requests for bulk upload (as of October 2024) with the information available on the page. It works by setting the clipboard, so you should be able to just paste that into a spreadsheet and fill in the missing data. If you'd like to use it as a bookmarklet instead, keep everything from the line containing "`javascript: (() => {`" through the line containing "`generateSpreadsheet();})();`", deleting the "`/*`" from the beginning of the first and last lines.
+This script adds a button to the **bottom** of any page that has a bunch of work blurbs on it. If you click it, it will parse the current page and pre-fill a spreadsheet in the format the audiofic archive requests for bulk upload (as of October 2024) with the information available on the page. It works by setting the clipboard, so you should be able to just paste that into a spreadsheet and fill in the missing data. If you'd like to use it as a bookmarklet instead, keep everything from the line containing "`javascript: (() => {`" through the line containing "`generateSpreadsheet();})();`", deleting the "`/*`" from the beginning of the first and last lines. [Install here](https://github.com/irrationalpie7/fandom-scripts/raw/refs/heads/main/tampermonkey/prefill-audiofic-sheet.pub.user.js)
 
 ### Major caveats
 
