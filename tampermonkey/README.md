@@ -72,6 +72,7 @@ This script adds a button to the **bottom** of any page that has a bunch of work
 3. Any links in the summary to things other than ao3 users or works will be preserved in the "notes" column
 4. At this point the script is pretty bare bones and doesn't have any sort of success or error messages
 5. The script really will generate the button on every single page with blurbs. I recommend keeping the script installed but disabled unless you're actively archiving.
+6. I picked the format based on going to the [audiofic archive](https://audiofic.jinjurly.com/about-this-site), following the link to their podfic submission form, and then looking at their linked template. The generated spreadsheet includes header rows so you can double check the columns still match the template. Please follow their instructions for making sure the other info is filled in correctly!
 
 ## Tone Marks II
 
