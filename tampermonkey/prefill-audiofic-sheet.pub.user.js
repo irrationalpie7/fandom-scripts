@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Prefill audiofic archive spreadsheet
-// @version      1.0
+// @version      1.0.1
 // @description  Automatically generate a spreadsheet from a list of works
 // @author       irrationalpie7
 // @match        https://archiveofourown.org/*
@@ -68,7 +68,7 @@ function parseBlurb(blurb) {
     .filter((a) => !a.href.includes("/users/") && !a.href.includes("/works/"))
     .map((a) => `${a.textContent} (${a.href})`)
     .join(" ; ");
-  work.series = Array.from(blurb.querySelectorAll("ul.series li"))
+  work.series = Array.from(blurb.querySelectorAll("ul.series > li"))
     .map((li) => {
       const a = li.querySelector("a");
       const num = li.querySelector("strong");
