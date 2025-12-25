@@ -5,6 +5,69 @@ import re
 import os
 import requests
 from pathlib import Path
+import asyncio
+from playwright.async_api import async_playwright, TimeoutError as PlaywrightTimeoutError
+
+
+async def playwright_main(urls, dir, wait_selector, offset):
+    # Use 'async with' to manage the playwright instance
+    async with async_playwright() as p:
+        browser = await p.chromium.launch(headless=True)
+
+        failure_count = 0
+
+        for i, url in enumerate(urls[offset:], start=offset):
+            success = await save_scripted_content(url, i, dir, wait_selector, browser)
+            if not success:
+                failure_count += 1
+                print(
+                    f"Failure #{failure_count}. Will sleep to try to avoid rate-limiting")
+                # Sleeps for failure_count seconds
+                await asyncio.sleep(failure_count)
+                print("Done sleeping!")
+
+        # This method is probably more prone to rate-limiting:
+        # await asyncio.gather(*[save_scripted_content(url, i, dir, wait_selector, browser) for i, url in enumerate(urls[offset:], start=offset)])
+
+        # Close the browser
+        await browser.close()
+
+playwright_error_count = 0
+
+
+async def save_scripted_content(url, i, dir, wait_selector, browser):
+    path = Path(dir, f"file-{i}.html")
+    if os.path.exists(path):
+        # print(f" - file-{i}.html already exists; skipping current url")
+        return
+
+    page = await browser.new_page()
+    await page.goto(url)
+
+    # Wait for the script-loaded element to appear
+    save = True
+    abort = False
+    try:
+        await page.wait_for_selector(wait_selector)
+    except PlaywrightTimeoutError as err:  # Exception
+        global playwright_error_count
+        playwright_error_count += 1
+        print(
+            f"Unable to download chapter at: {url}. Likely, we timed out waiting for the page to load. Try rerunning the script to get missing chapters.")
+        save = False
+        if playwright_error_count % 5 == 0:
+            print(
+                f"Failed to retrieve {playwright_error_count} urls")
+
+    if save:
+        with open(path, "w", newline="", encoding="utf-8") as file:
+            file.write(await page.content())
+    else:
+        with open(Path(dir, f"error-file-{i}.html"), "w", newline="", encoding="utf-8") as file:
+            file.write(await page.content())
+
+    if abort:
+        raise RuntimeError("Aborting")
 
 
 def create_unique_dir(file_dir):
@@ -25,7 +88,7 @@ def create_unique_dir(file_dir):
 def save_html(dir, i, url, matcher=None):
     path = Path(dir, f"file-{i}.html")
     if os.path.exists(path):
-        # print(f"{path} already exists; skipping url {url}")
+        # print(f" - file-{i}.html already exists; skipping current url")
         return
 
     response = requests.get(url)
@@ -79,10 +142,18 @@ def canonical(orig_url: str, relative_url: str) -> str:
     if m:
         return relative_url
     m = re.search(r'https?://[^/]*', orig_url)
+    # pyright: ignore[reportOptionalMemberAccess]
     return f"{m.group(0)}{relative_url}"
 
 
-def extract_urls_by_host(url: str, num: int, has_in_dir: bool, in_dir: str) -> list[str]:
+def wait_selector_by_host(url: str):
+    if "wtr-lab.com" in url:
+        return ".pr-line-text"
+
+    return None
+
+
+def extract_urls_by_host(url: str, num: int, has_in_dir: bool, in_dir: str | None) -> list[str]:
 
     # format to add new host site:
     # if "SITENAME" in url
@@ -122,6 +193,15 @@ def extract_urls_by_host(url: str, num: int, has_in_dir: bool, in_dir: str) -> l
                 url, in_dir, "#main a")
         # single-page TOC
         return [url]
+
+    # https://wtr-lab.com/en/novel/19458/game-invasion-starting-with-a-random-system-draw/chapter-301?service=web
+    if "wtr-lab.com" in url:
+        # note: I think this method will fail, so don't specify an in_dir
+        if has_in_dir:
+            return extract_urls(
+                url, in_dir, "a.chapter-item")
+        # multiple URLs
+        return [f"{url}/chapter-{x}?service=web" for x in range(1, num+1)]
 
     raise Exception(
         "Unsupported url host; please add it to the parse_url function")
@@ -183,9 +263,17 @@ def main():
 
     num = min(len(args["url_list"]), args["num"])
     offset = args["offset"]
+    wait_selector = wait_selector_by_host(args["url_list"][0])
     print(f"Saving from {offset} to {num}")
+
+    if wait_selector is not None:
+        asyncio.run(playwright_main(
+            args["url_list"], args["out_dir"], wait_selector, offset))
+        return
+
     for i in range(args["offset"], num):
-        save_html(args["out_dir"], i, args["url_list"][i])
+        url = args["url_list"][i]
+        save_html(args["out_dir"], i, url, None)
         if ((i - args["offset"] + 1) % 50 == 0):
             print(
                 f"... just saved #{i + 1} of {num} (progress is {i - offset + 1} of {num - offset})")
