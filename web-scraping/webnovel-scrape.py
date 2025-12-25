@@ -15,24 +15,31 @@ async def playwright_main(urls, dir, wait_selector, offset):
         browser = await p.chromium.launch(headless=True)
 
         failure_count = 0
-
+        success_count = 0
         for i, url in enumerate(urls[offset:], start=offset):
             success = await save_scripted_content(url, i, dir, wait_selector, browser)
+            if success:
+                success_count += 1
             if not success:
+                if i == offset:
+                    print(
+                        f"Failed to retrieve first attempted url ({url}). If this url looks correct, your IP has likely been banned. Check the associated error file (error-file-{i}.html) to verify. Aborting!")
+                    return
                 failure_count += 1
                 print(
                     f"Failure #{failure_count}. Will sleep to try to avoid rate-limiting")
-                # Sleeps for failure_count seconds
-                await asyncio.sleep(failure_count)
+                # Sleeps for failure_count minutes
+                await asyncio.sleep(failure_count * 60)
                 print("Done sleeping!")
+
+        print(
+            f"Successfully retrieved {success_count} chapters and skipped {failure_count} chapters. Rerun the script with outdir={dir} to retrieve missing chapters!")
 
         # This method is probably more prone to rate-limiting:
         # await asyncio.gather(*[save_scripted_content(url, i, dir, wait_selector, browser) for i, url in enumerate(urls[offset:], start=offset)])
 
         # Close the browser
         await browser.close()
-
-playwright_error_count = 0
 
 
 async def save_scripted_content(url, i, dir, wait_selector, browser):
@@ -46,18 +53,12 @@ async def save_scripted_content(url, i, dir, wait_selector, browser):
 
     # Wait for the script-loaded element to appear
     save = True
-    abort = False
     try:
         await page.wait_for_selector(wait_selector)
-    except PlaywrightTimeoutError as err:  # Exception
-        global playwright_error_count
-        playwright_error_count += 1
+    except PlaywrightTimeoutError:
         print(
-            f"Unable to download chapter at: {url}. Likely, we timed out waiting for the page to load. Try rerunning the script to get missing chapters.")
+            f"Unable to download chapter at: {url}. Likely, we are being rate-limited or the site has otherwise detected suspicious activity. Check error-file-{i}.html, and try rerunning the script to get missing chapters.")
         save = False
-        if playwright_error_count % 5 == 0:
-            print(
-                f"Failed to retrieve {playwright_error_count} urls")
 
     if save:
         with open(path, "w", newline="", encoding="utf-8") as file:
@@ -65,9 +66,6 @@ async def save_scripted_content(url, i, dir, wait_selector, browser):
     else:
         with open(Path(dir, f"error-file-{i}.html"), "w", newline="", encoding="utf-8") as file:
             file.write(await page.content())
-
-    if abort:
-        raise RuntimeError("Aborting")
 
 
 def create_unique_dir(file_dir):
