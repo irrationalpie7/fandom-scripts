@@ -22,7 +22,7 @@ playwright install
 pip install bs4
 ```
 
-Later, just `source .venv/bin/activate` will be sufficient.
+Later, just `source .venv/bin/activate` will be sufficient. To leave the `venv`, use `deactivate` in terminal
 
 Example command:
 `python3 webnovel-scrape.py https://wtr-lab.com/en/novel/19458/game-invasion-starting-with-a-random-system-draw max=376 out_dir=raw-html-4`

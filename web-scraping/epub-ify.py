@@ -9,7 +9,7 @@ import re
 def pretty_title(file):
     f = open(file, "r", encoding="utf8")
     soup = BeautifulSoup(f, 'xml')
-    return soup.title.text
+    return soup.title.text # pyright: ignore[reportOptionalMemberAccess]
 
 
 def atoi(text):
@@ -111,7 +111,7 @@ author = sys.argv[3]
 files = html_files(folder)
 
 # this looks for the first number in the file name
-first_chapter = re.search(r'[1-9][0-9]*', os.path.basename(files[0])).group(0)
-last_chapter = re.search(r'[1-9][0-9]*', os.path.basename(files[-1])).group(0)
+first_chapter = re.search(r'[1-9][0-9]*', os.path.basename(files[0])).group(0) # pyright: ignore[reportOptionalMemberAccess]
+last_chapter = re.search(r'[1-9][0-9]*', os.path.basename(files[-1])).group(0) # pyright: ignore[reportOptionalMemberAccess]
 
 generate(html_files(folder), title, author, first_chapter, last_chapter)

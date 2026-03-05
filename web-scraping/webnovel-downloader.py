@@ -13,7 +13,7 @@ class Chapter(object):
     """
     # Constructor
 
-    def __init__(self, url: str, title: str = None, soup: BeautifulSoup = None):
+    def __init__(self, url: str, title: str | None = None, soup: BeautifulSoup | None = None):
         self.url = url
         self.title = title
         self.soup = soup
@@ -26,7 +26,7 @@ class Chapter(object):
 
 def set_chapter_titles_by_index(chapters: list[Chapter]):
     for i, chapter in enumerate(chapters):
-        chapter.title = f"Chapter {i}"
+        chapter.title = f"Chapter {i+1}"
 
 
 class WebnovelDownloader(object):
@@ -72,7 +72,7 @@ class WebnovelDownloader(object):
     def done_downloading(self) -> bool:
         return self.url_offset >= len(self.get_chapter_urls())
 
-    def download_batch(self) -> int:
+    def download_batch(self) -> None:
         """Downloads the next batch of chapters
         """
         if self.url_batch_size <= 0:
@@ -227,7 +227,7 @@ class WuxiaWorldEuDownloader(WebnovelDownloader):
         # to:
         # https://www.wuxiaworld.eu/chapter/the-e-sports-circles-toxic-assembly-camp-
         if "www.wuxiaworld.eu/novel/" in base_chapter_url:
-            base_chapter_url = f"{base_chapter_url.replace('/novel/','/chapter/')}-"
+            base_chapter_url = f"{base_chapter_url.replace('/novel/', '/chapter/')}-"
         self.base_chapter_url = base_chapter_url
         self.chapters = chapters
 
@@ -256,7 +256,7 @@ def canonical(orig_url: str, relative_url: str) -> str:
     if m:
         return relative_url
     m = re.search(r'https?://[^/]*', orig_url)
-    return f"{m.group(0)}{relative_url}"
+    return f"{m.group(0)}{relative_url}"  # pyright: ignore[reportOptionalMemberAccess] # nopep8
 
 
 def get_soup(url: str) -> BeautifulSoup:
@@ -355,7 +355,7 @@ def get_chapter_titles_from_toc(toc_url: str, chapter_url_selector: str) -> list
 
 def get_chapter_urls_from_toc(toc_url: str, chapter_url_selector: str) -> list[str]:
     soup = get_soup(toc_url)
-    return [canonical(toc_url, x["href"]) for x in soup.select(chapter_url_selector)]
+    return [canonical(toc_url, x["href"]) for x in soup.select(chapter_url_selector)]  # pyright: ignore[reportArgumentType] # nopep8
 
 
 print('Usage:\npython webnovel-downloader.py <url> <number of chapters/toc pages; defaults to 1> <num chapters to download; defaults to 1; set to "all" to override>\n')

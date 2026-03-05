@@ -6,7 +6,7 @@ import os
 import requests
 from pathlib import Path
 import asyncio
-from playwright.async_api import async_playwright, TimeoutError as PlaywrightTimeoutError
+from playwright.async_api import async_playwright, TimeoutError as PlaywrightTimeoutError  # pyright: ignore[reportMissingImports] # nopep8
 
 
 async def playwright_main(urls, dir, wait_selector, offset):
@@ -16,14 +16,25 @@ async def playwright_main(urls, dir, wait_selector, offset):
 
         failure_count = 0
         success_count = 0
+        skipped_count = 0
+        real_offset = -1
         for i, url in enumerate(urls[offset:], start=offset):
             success = await save_scripted_content(url, i, dir, wait_selector, browser)
-            if success:
+            if success is None:
+                skipped_count += 1
+                continue
+            # The first time success is not None, update real_offset
+            if real_offset == -1:
+                real_offset = i
+                if real_offset != offset:
+                    print(
+                        f"Skipped {skipped_count} already-downloaded files. Starting with offset {real_offset}")
+            if success is True:
                 success_count += 1
             if not success:
-                if i == offset:
+                if i == real_offset:
                     print(
-                        f"Failed to retrieve first attempted url ({url}). If this url looks correct, your IP has likely been banned. Check the associated error file (error-file-{i}.html) to verify. Aborting!")
+                        f"Failed to retrieve first attempted url ({url}). If this url looks correct, your IP has likely been banned. Check the associated error file ({dir}/error-file-{i}.html) to verify. Aborting!")
                     return
                 failure_count += 1
                 print(
@@ -33,9 +44,9 @@ async def playwright_main(urls, dir, wait_selector, offset):
                 print("Done sleeping!")
 
         print(
-            f"Successfully retrieved {success_count} chapters and skipped {failure_count} chapters. Rerun the script with outdir={dir} to retrieve missing chapters!")
+            f"Successfully retrieved {success_count}, skipped {skipped_count}, and failed {failure_count} chapters. Rerun the script with outdir={dir} to retry failed chapters!")
 
-        # This method is probably more prone to rate-limiting:
+        # This method might be faster but is probably more prone to rate-limiting:
         # await asyncio.gather(*[save_scripted_content(url, i, dir, wait_selector, browser) for i, url in enumerate(urls[offset:], start=offset)])
 
         # Close the browser
@@ -46,26 +57,26 @@ async def save_scripted_content(url, i, dir, wait_selector, browser):
     path = Path(dir, f"file-{i}.html")
     if os.path.exists(path):
         # print(f" - file-{i}.html already exists; skipping current url")
-        return
+        return None
 
     page = await browser.new_page()
     await page.goto(url)
 
     # Wait for the script-loaded element to appear
-    save = True
+    success = True
     try:
         await page.wait_for_selector(wait_selector)
     except PlaywrightTimeoutError:
-        print(
-            f"Unable to download chapter at: {url}. Likely, we are being rate-limited or the site has otherwise detected suspicious activity. Check error-file-{i}.html, and try rerunning the script to get missing chapters.")
-        save = False
+        success = False
 
-    if save:
+    if success:
         with open(path, "w", newline="", encoding="utf-8") as file:
             file.write(await page.content())
     else:
         with open(Path(dir, f"error-file-{i}.html"), "w", newline="", encoding="utf-8") as file:
             file.write(await page.content())
+
+    return success
 
 
 def create_unique_dir(file_dir):
@@ -140,8 +151,7 @@ def canonical(orig_url: str, relative_url: str) -> str:
     if m:
         return relative_url
     m = re.search(r'https?://[^/]*', orig_url)
-    # pyright: ignore[reportOptionalMemberAccess]
-    return f"{m.group(0)}{relative_url}"
+    return f"{m.group(0)}{relative_url}"  # pyright: ignore[reportOptionalMemberAccess] # nopep8
 
 
 def wait_selector_by_host(url: str):
@@ -192,12 +202,9 @@ def extract_urls_by_host(url: str, num: int, has_in_dir: bool, in_dir: str | Non
         # single-page TOC
         return [url]
 
-    # https://wtr-lab.com/en/novel/19458/game-invasion-starting-with-a-random-system-draw/chapter-301?service=web
+    # Example orig url: https://wtr-lab.com/en/novel/19458/game-invasion-starting-with-a-random-system-draw
+    # To create url: ORIG/chapter-X?service=web
     if "wtr-lab.com" in url:
-        # note: I think this method will fail, so don't specify an in_dir
-        if has_in_dir:
-            return extract_urls(
-                url, in_dir, "a.chapter-item")
         # multiple URLs
         return [f"{url}/chapter-{x}?service=web" for x in range(1, num+1)]
 
