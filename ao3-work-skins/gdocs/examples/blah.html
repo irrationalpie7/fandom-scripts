@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <style type="text/css" media="all">
+      /* structural behavior */
+      .outer {
+        /* TODO: evaluate base width */
+        width: 800px;
+        max-width: 100%;
+        margin-inline: auto;
+        /* background-color: black;
+        color: white; */
+      }
+
+      .text-wrapper {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        flex-wrap: wrap;
+        /* margin-block-start: 1em; */
+      }
+
+      .text-wrapper .text {
+        flex: 2;
+        /* TODO: evaluate text min-width */
+        min-width: 170px;
+        margin-block-start: 0;
+        /* margin-block-end: 1em; */
+        margin-inline-end: 10px;
+      }
+
+      .comment-wrapper,
+      .comment-spacer {
+        display: flex;
+        flex-direction: column;
+        flex: 1;
+        /* TODO: evaluate comment min-width */
+        min-width: 170px;
+        padding-inline: 5px;
+        box-sizing: border-box;
+      }
+
+      .comment-wrapper {
+        padding: 5px;
+        box-sizing: border-box;
+        margin-block-end: 1em;
+      }
+
+      .comment-wrapper .comment {
+        margin-inline-start: 10px;
+        margin-block: 2px;
+      }
+
+      .comment-wrapper .comment:first-child {
+        margin-inline-start: 0;
+      }
+
+      .text,
+      .comment {
+        padding: 5px;
+        box-sizing: border-box;
+        border-radius: 0.5em;
+        line-height: 1.3em;
+        /* this is just to match up paragraphs and divs */
+        margin-block: 1em;
+      }
+
+      .comment {
+        /* TODO: is there another name for this corner? */
+        border-top-left-radius: 0.1em;
+      }
+
+      .text ul,
+      .text ol,
+      .text p {
+        margin-block: 0;
+      }
+
+      /* decoration */
+      .highlight {
+        text-decoration: none;
+        border-block-end-style: ridge;
+        border-width: 3px;
+        padding: 0 2px;
+        box-sizing: border-box;
+        margin: 0 -2px;
+      }
+
+      .comment-wrapper .comment {
+        border: 2px ridge #aaa;
+        /* margin: 0; */
+      }
+
+      .text-wrapper:has(.comment-wrapper) .text {
+        border-inline-end-style: ridge;
+        border-width: 3px;
+        border-color: #aaa;
+      }
+
+      .text-wrapper:has(.highlight:hover) .comment-wrapper,
+      .comment-wrapper:hover,
+      .text-wrapper:has(.comment-wrapper:hover) .highlight,
+      .highlight:hover {
+        /* in principle, this could be useful for linking, but I think maybe not */
+        color: black;
+      }
+
+      .comment-wrapper .aaa,
+      .text-wrapper:has(.aaa:first-child) .highlight,
+      .highlight.highlight.highlight.aaa {
+        border-color: #ed665b;
+      }
+
+      .comment-wrapper .bbb,
+      .text-wrapper:has(.bbb:first-child) .highlight,
+      .highlight.highlight.highlight.bbb {
+        border-color: #4ecde6;
+
+        /* Potentially avoid using this orange with red or yellow as
+ * the orange is close to the yellow with Reversi (dark mode)
+ * or close to the red with default AO3 (light mode) */
+        outline-color: #ed665b;
+        outline-color: #faa03e;
+        outline-color: #fcc934;
+        outline-color: #5bb974;
+        outline-color: #4ecde6;
+        outline-color: #af5cf7;
+        outline-color: #ff63b8;
+      }
+
+      q {
+        border: 2px ridge #aaa;
+        font-size: 90%;
+        display: block;
+        padding: 5px;
+        box-sizing: border-box;
+        border-radius: 0.4em;
+        /* TODO: is there another name for this corner? */
+        border-top-left-radius: 0.1em;
+        margin-block-end: 0.4em;
+      }
+
+      .off-only {
+        display: none;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="outer">
+      <div class="text-wrapper">
+        <p class="text">
+          This is part of the story. Let's make it longer so we see its full
+          glory.
+        </p>
+        <div class="comment-spacer"></div>
+      </div>
+      <div class="text-wrapper">
+        <p class="text">Limitations so far:</p>
+        <div class="comment-spacer"></div>
+      </div>
+      <div class="text-wrapper">
+        <div class="text">
+          <ul>
+            <li>Spacing is somewhat odd if there's a long comment thread</li>
+            <li>
+              Spacing is somewhat odd if there's a long paragraph and the
+              comment thread is supposed to be closer to the top or bottom
+            </li>
+            <li>
+              Multiple comment threads for one paragraph are not supported at
+              the moment
+            </li>
+            <li>
+              If the <u class="highlight">paragraph is really long</u>, then
+              when viewed on phone or without workskin, the comment might be
+              confusing without quoted text.
+            </li>
+            <li>
+              Alternately, if the quoted section is long, quoting it again in
+              the comment makes no sense
+              <ul>
+                <li>
+                  possibly we could truncate the quoted text after X characters?
+                </li>
+                <li>
+                  possibly we search for the first word break less than X
+                  characters, and if there is none (or the part before the break
+                  is too short, like "A") we truncate @ X without a word-break
+                </li>
+              </ul>
+            </li>
+          </ul>
+        </div>
+        <div class="comment-wrapper">
+          <p class="comment aaa">
+            <i><q>paragraph is really long</q></i
+            ><br class="off-only" />
+            <b>Character A:</b> Hi there
+          </p>
+        </div>
+      </div>
+      <div class="text-wrapper">
+        <p class="text">
+          This is some
+          <u class="highlight">long marked-up text. No, even longer</u>. And the
+          paragraph is really short.
+        </p>
+        <div class="comment-wrapper">
+          <p class="aaa comment">
+            <i><q>long marked-up text. No, even longer</q></i
+            ><br class="off-only" />
+            <b>Character A:</b> text is a boring word
+          </p>
+          <p class="bbb comment"><b>Character B:</b> nuh-uh!</p>
+          <p class="aaa comment">
+            <b>Character A:</b> ??? are you five ??? I can't believe you.
+          </p>
+        </div>
+      </div>
+      <div class="text-wrapper">
+        <p class="text">
+          The story continues. This time let's make it a really super long
+          paragraph. This time let's make it a really super long paragraph. This
+          time let's make it a really super long paragraph. This time let's make
+          it a really super long paragraph. This time let's make it a really
+          super long paragraph. This time let's make it a really super long
+          paragraph. This time let's make it a really super long paragraph.
+          <u class="highlight"
+            >This time let's make it a really super long paragraph.</u
+          >
+          This time let's make it a really super long paragraph.
+        </p>
+        <div class="comment-wrapper">
+          <p class="bbb comment">
+            <i><q>This time let's make it a really super long paragraph.</q></i
+            ><br class="off-only" />
+            <b>Character B:</b> this sentence gets repeated a couple times.
+          </p>
+        </div>
+      </div>
+      <div class="text-wrapper">
+        <p class="text">
+          We can follow all that up with another comment-less paragraph if we
+          want.
+        </p>
+        <div class="comment-spacer"></div>
+      </div>
+      <div class="text-wrapper">
+        <div class="text">
+          <p>
+            What if we want a highlight that spans multiple
+            <u class="highlight">paragraphs?</u>
+          </p>
+          <!-- TODO: fix spacing -->
+          <p style="margin-top: 1em">
+            <u class="highlight">It would look something like</u> this.
+          </p>
+        </div>
+        <div class="comment-wrapper">
+          <p class="bbb comment">
+            <i><q>paragraphs? It would look something like</q></i
+            ><br class="off-only" />
+            <b>Character B:</b> Hmmm
+          </p>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
