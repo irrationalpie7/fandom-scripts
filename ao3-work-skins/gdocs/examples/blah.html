@@ -8,8 +8,11 @@
         width: 800px;
         max-width: 100%;
         margin-inline: auto;
-        /* background-color: black;
-        color: white; */
+      }
+
+      body {
+        /* background-color: #333;
+        color: #fff; */
       }
 
       .text-wrapper {
@@ -26,7 +29,7 @@
         min-width: 170px;
         margin-block-start: 0;
         /* margin-block-end: 1em; */
-        margin-inline-end: 10px;
+        /* margin-inline-end: 10px; */
       }
 
       .comment-wrapper,
@@ -57,15 +60,22 @@
 
       .text,
       .comment {
-        padding: 5px;
+        /* padding: 5px; */
         box-sizing: border-box;
-        border-radius: 0.5em;
         line-height: 1.3em;
         /* this is just to match up paragraphs and divs */
         margin-block: 1em;
       }
 
+      .comment-wrapper,
+      .text-bracket,
       .comment {
+        box-sizing: border-box;
+        border-radius: 0.5em;
+      }
+
+      .comment {
+        padding: 5px;
         /* TODO: is there another name for this corner? */
         border-top-left-radius: 0.1em;
       }
@@ -74,16 +84,20 @@
       .text ol,
       .text p {
         margin-block: 0;
+        padding-inline-end: 5px;
+      }
+
+      /* FIXME: do other kinds of block elements too? */
+      .text p + p {
+        margin-block-start: 1em;
       }
 
       /* decoration */
       .highlight {
         text-decoration: none;
-        border-block-end-style: ridge;
+        border-block-end-style: groove;
         border-width: 3px;
-        padding: 0 2px;
         box-sizing: border-box;
-        margin: 0 -2px;
       }
 
       .comment-wrapper .comment {
@@ -91,18 +105,26 @@
         /* margin: 0; */
       }
 
-      .text-wrapper:has(.comment-wrapper) .text {
+      .text-wrapper:has(.comment-wrapper) .text-bracket {
         border-inline-end-style: ridge;
         border-width: 3px;
         border-color: #aaa;
       }
 
-      .text-wrapper:has(.highlight:hover) .comment-wrapper,
-      .comment-wrapper:hover,
+      .comment-wrapper {
+        border-inline-start-style: groove;
+        border-width: 3px;
+        border-color: #aaa;
+      }
+
+      .text-wrapper:has(.highlight:hover) .comment-wrapper .aaa,
+      .comment-wrapper:hover .aaa {
+        /* box-shadow: 0 0 5px #ed665b; */
+      }
+
       .text-wrapper:has(.comment-wrapper:hover) .highlight,
       .highlight:hover {
-        /* in principle, this could be useful for linking, but I think maybe not */
-        color: black;
+        /* box-shadow: 0 3px 4px -2px #ed665b; */
       }
 
       .comment-wrapper .aaa,
@@ -148,27 +170,30 @@
   <body>
     <div class="outer">
       <div class="text-wrapper">
-        <p class="text">
+        <p class="text text-bracket">
           This is part of the story. Let's make it longer so we see its full
           glory.
         </p>
         <div class="comment-spacer"></div>
       </div>
       <div class="text-wrapper">
-        <p class="text">Limitations so far:</p>
+        <p class="text text-bracket">Limitations so far:</p>
         <div class="comment-spacer"></div>
       </div>
       <div class="text-wrapper">
-        <div class="text">
+        <div class="text text-bracket">
           <ul>
-            <li>Spacing is somewhat odd if there's a long comment thread</li>
+            <li>
+              Spacing is somewhat odd if there's a comment thread that's longer
+              than the paragraph
+            </li>
             <li>
               Spacing is somewhat odd if there's a long paragraph and the
               comment thread is supposed to be closer to the top or bottom
             </li>
             <li>
               Multiple comment threads for one paragraph are not supported at
-              the moment
+              the moment (though I have some ideas)
             </li>
             <li>
               If the <u class="highlight">paragraph is really long</u>, then
@@ -200,11 +225,27 @@
         </div>
       </div>
       <div class="text-wrapper">
-        <p class="text">
-          This is some
-          <u class="highlight">long marked-up text. No, even longer</u>. And the
-          paragraph is really short.
+        <p class="text text-bracket">
+          A paragraph that alas has a gap between it and the next paragraph when
+          viewed on desktop (because the up-coming comment thread is too long).
         </p>
+        <div class="comment-spacer"></div>
+      </div>
+      <div class="text-wrapper">
+        <div class="text">
+          <p>
+            Spacer paragraph without bracket. Note that even though on desktop
+            it would make more sense for the top comment to align with the
+            bottom paragraph, in order to keep the comment with the bottom
+            paragraph on mobile we can't include any paragraphs after the
+            highlighted one inside this same spacing group.
+          </p>
+          <p class="text-bracket">
+            This is some
+            <u class="highlight">long marked-up text. No, even longer</u>. And
+            the paragraph is really short.
+          </p>
+        </div>
         <div class="comment-wrapper">
           <p class="aaa comment">
             <i><q>long marked-up text. No, even longer</q></i
@@ -218,7 +259,30 @@
         </div>
       </div>
       <div class="text-wrapper">
-        <p class="text">
+        <div class="text">
+          <p class="text-bracket">
+            Alternately, without the spacer paragraph, and without quoting the
+            highlighted text, it looks more like this when the
+            <u class="highlight">text of the paragraph is short.</u>
+          </p>
+        </div>
+        <div class="comment-wrapper">
+          <p class="aaa comment"><b>Character A:</b> text is a boring word</p>
+          <p class="bbb comment"><b>Character B:</b> nuh-uh!</p>
+          <p class="aaa comment">
+            <b>Character A:</b> ??? are you five ??? I can't believe you.
+          </p>
+        </div>
+      </div>
+      <div class="text-wrapper">
+        <p class="text text-bracket">
+          Another paragraph that alas has a gap between it and the previous
+          paragraph when viewed on desktop.
+        </p>
+        <div class="comment-spacer"></div>
+      </div>
+      <div class="text-wrapper">
+        <p class="text text-bracket">
           The story continues. This time let's make it a really super long
           paragraph. This time let's make it a really super long paragraph. This
           time let's make it a really super long paragraph. This time let's make
@@ -239,26 +303,23 @@
         </div>
       </div>
       <div class="text-wrapper">
-        <p class="text">
+        <p class="text text-bracket">
           We can follow all that up with another comment-less paragraph if we
           want.
         </p>
         <div class="comment-spacer"></div>
       </div>
       <div class="text-wrapper">
-        <div class="text">
+        <div class="text text-bracket">
           <p>
             What if we want a highlight that spans multiple
             <u class="highlight">paragraphs?</u>
           </p>
-          <!-- TODO: fix spacing -->
-          <p style="margin-top: 1em">
-            <u class="highlight">It would look something like</u> this.
-          </p>
+          <p><u class="highlight">It would look something like</u> this.</p>
         </div>
         <div class="comment-wrapper">
           <p class="bbb comment">
-            <i><q>paragraphs? It would look something like</q></i
+            <i><q>paragraphs? It...</q></i
             ><br class="off-only" />
             <b>Character B:</b> Hmmm
           </p>
