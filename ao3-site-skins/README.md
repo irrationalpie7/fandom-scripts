@@ -60,3 +60,41 @@ This is based on the public [Reversi](https://archiveofourown.org/skins/929) sit
 I believe this skin includes the reversi correction above, but it's been a while.
 
 ![image](reversi-replacement.png)
+
+## Experimental workskin overrides
+
+Ever want to read a chat fic on your phone, but the simulated phone is _just_ wider than your actual phone screen so you end up having to scroll left and right? This site skin is intended to solve that problem by forcing the max width of a workskin to clamp to 100% of the page width. However, depending on how a workskin is written, this may be ineffective or even counter-productive (for example, some workskins involve a lot of indentation, so clamping the max width results in occasionally really skinny containers, sometimes even with one character per line whoops). Anyway, for the most part it works for me! 
+
+I also have the following additional css, which I use to force most workskins to display with my preferred text and background color (though it does occasionally mess up by setting a transparent background where there should be a solid one and making text overlap).
+
+Remember, you can always stop using this skin, revert it, or view a work without the creator's style if you suspect this workskin is decreasing the readability of a work (which it can definitely do sometimes, that's why I call it experimental)
+
+```css
+#workskin blockquote,
+#workskin div,
+#workskin span:not(.script-quote),
+#workskin p,
+#workskin h1,
+#workskin h2,
+#workskin h3,
+#workskin h4,
+#workskin h5,
+#workskin h6,
+#workskin em,
+#workskin strong,
+#workskin strike,
+#workskin table,
+#workskin ol,
+#workskin u,
+#workskin b,
+#workskin ul,
+#workskin .bogus[comment="can't do * because weird things happen to a progress bar if you make it inherit its background-color"] {
+  background-color: inherit !important;
+  color: inherit !important;
+}
+
+#workskin [role="article"] .userstuff > div:not(#bogus#bogus#bogus)[class],
+#workskin [role="article"].userstuff > div:not(#bogus#bogus#bogus)[class] {
+  border: 2px ridge #aaa;
+}
+```
