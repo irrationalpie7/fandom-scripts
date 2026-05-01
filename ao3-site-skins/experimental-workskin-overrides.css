@@ -1,0 +1,194 @@
+[comment="allow selecting text"],
+#workskin *:not(#bogus#bogus#bogus) {
+  user-select: auto !important;
+  -webkit-user-select: auto;
+  -moz-user-select: auto;
+  -ms-user-select: auto;
+}
+
+[comment="make sure images aren't enormous"],
+#workskin#workskin img {
+  min-width: 10px;
+}
+
+[comment="set max width of 100% for 'container'-type elements"],
+#workskin [role="article"] .userstuff > div:not(#bogus#bogus#bogus):not(.ebody),
+#workskin [role="article"].userstuff > div:not(#bogus#bogus#bogus):not(.ebody),
+#workskin#workskin blockquote.phone,
+#workskin#workskin blockquote.phone .txt,
+#workskin#workskin .twt,
+#workskin#workskin .instBody,
+#workskin#workskin .phone,
+#workskin#workskin .wpp .bg1,
+#workskin#workskin .phone .messagebody,
+#workskin tbody.messagehead,
+#workskin#workskin .box .phone p,
+#workskin#workskin .box .phone .header,
+#workskin#workskin .phone .header,
+#workskin .twt div:not(#bogus,
+.dmreactionreceived,
+.dmreactionsent),
+#workskin .twText,
+#workskin#workskin .tungle,
+#workskin .phone .messagebody {
+  max-width: 100%;
+  box-sizing: border-box;
+  min-width: 0;
+  overflow: unset;
+}
+
+[comment="override display: table to allow max-width to apply correctly"],
+#workskin#workskin .wpp .bg1,
+#workskin#workskin .chat-box,
+#workskin#workskin .whatsapp .messages,
+#workskin#workskin .phone,
+#workskin#workskin .phone .messagebody,
+#workskin .twtmessagephone > .twtmessagebody,
+#workskin#workskin .tungle,
+#workskin .wpp-phone:has(p),
+#workskin#workskin .ios .messagebody,
+#workskin .twt .bg1,
+#workskin .twt .bg2,
+#workskin .twt .bg3 {
+  display: flow-root;
+}
+
+[comment="vertically expand scrolling phone/chat window so scrolling is no longer necessary"],
+#workskin#workskin .twt .bg,
+#workskin#workskin .twt .bg1,
+#workskin#workskin .twt .bg2,
+#workskin#workskin .twt .bg3,
+#workskin#workskin .twt .bg4,
+#workskin#workskin .twt .bg5,
+#workskin#workskin .aim-log,
+#workskin#workskin .wpp .bg1,
+#workskin#workskin .chat-box,
+#workskin#workskin .whatsapp .messages,
+#workskin#workskin .chat-skin,
+#workskin#workskin .chat-skin .chat-wrapper,
+#workskin#workskin .dark-chat-box,
+#workskin#workskin .ebody {
+  height: unset;
+  max-height: unset;
+  overflow-y: unset;
+}
+
+[comment="center the container"],
+#workskin#workskin .instBody,
+#workskin#workskin .box .phone .header,
+#workskin#workskin .phone .header {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+[comment="some workskins only set min width rather than width. 300px is about phone width"],
+#workskin#workskin .phone {
+  width: 300px;
+}
+
+[comment="remove light-colored background images to save my poor vampire eyes"],
+#workskin#workskin .whatsapp.light .messages,
+#workskin#workskin .wpp .bg1 {
+  background-image: unset;
+}
+
+[comment="rescue mis-ordered floating elements"],
+#workskin#workskin .time,
+#workskin#workskin .group-text-name {
+  clear: both;
+  display: block;
+}
+
+[comment="below this point are mostly work-specific tweaks"],
+#workskin tbody.messagehead td {
+  max-width: 30%;
+}
+
+#workskin .box p > span:not(#bogus) {
+  white-space: unset;
+}
+
+#workskin#workskin .box p {
+  width: fit-content;
+}
+
+#workskin#workskin .twt .headerdmicon,
+#workskin#workskin .twt .iconqt,
+#workskin#workskin .twt .twtcircleicon,
+#workskin#workskin .twt .icondm {
+  position: relative;
+}
+
+#workskin#workskin .twt .qtid {
+  position: relative;
+  margin-top: -20px;
+}
+
+#workskin#workskin span.replydots,
+#workskin#workskin span.twtdots,
+#workskin#workskin p:has(.twtnumbers1) > span,
+#workskin#workskin .sharebar p > span,
+#workskin#workskin .sharebar1 p > span,
+#workskin#workskin .sharebar2 p > span,
+#workskin#workskin .sharebar3 p > span,
+#workskin#workskin .sharebar4 p > span,
+#workskin#workskin .sharebar5 p > span,
+#workskin#workskin .headerdm p > span,
+#workskin#workskin .headerdm p > img {
+  position: relative;
+  margin-left: 10px;
+}
+
+#workskin#workskin .headerdm br {
+  display: none;
+}
+
+#workskin#workskin .twt .reply .replyid p {
+  line-height: 1.5;
+}
+
+[comment="fix 'time' css classes when they get messed up"],
+#workskin#workskin .phone .time {
+  min-width: 0;
+  width: unset;
+  max-width: 95%;
+  margin-left: auto;
+  margin-right: auto;
+  box-sizing: border-box;
+  display: block;
+  clear: both;
+}
+
+#workskin .twtmessagephone:has(.twtmessagebody) {
+  display: block;
+}
+
+#workskin#workskin .tungle,
+#workskin .wpp-phone:has(p),
+#workskin#workskin .ios .messagebody {
+  min-width: 0;
+}
+
+#workskin .phone .messagebody span {
+  word-break: break-word;
+}
+
+#workskin#workskin .window .textfield,
+#workskin#workskin .window + .ebody,
+#workskin#workskin .ebody + .ebody,
+#workskin#workskin .ebody + .buttonbar {
+  width: 100%;
+  height: unset;
+  box-sizing: border-box;
+}
+
+[comment="remove extra br inside text messages"],
+.chat-wrapper .text br,
+.chat-wrapper .breply br,
+.chat-wrapper .greply br {
+  display: none;
+}
+
+#workskin#workskin .insidetext {
+  font-size: 100%;
+}
