@@ -74,6 +74,10 @@ This script adds a button to the **bottom** of any page that has a bunch of work
 5. The script really will generate the button on every single page with blurbs. I recommend keeping the script installed but disabled unless you're actively archiving.
 6. I picked the format based on going to the [audiofic archive](https://audiofic.jinjurly.com/about-this-site), following the link to their podfic submission form, and then looking at their linked template. The generated spreadsheet includes header rows so you can double check the columns still match the template. Please follow their instructions for making sure the other info is filled in correctly!
 
+## Pause gifs on ao3
+
+This extension auto-pauses gifs in ao3 works and adds buttons to start/stop the gif playing. [Install gif pausing userscript](https://github.com/irrationalpie7/fandom-scripts/raw/main/tampermonkey/pause-gifs.pub.user.js).
+
 ## Tone Marks II
 
 This extension adds pinyin accent marks to work/series pages and blurbs on AO3 for some fandoms. More info [here](https://github.com/irrationalpie7/AO3-Tone-Marks).
