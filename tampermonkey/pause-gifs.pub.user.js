@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         AO3 pause gifs
-// @version      0.5
+// @version      0.6
 // @description  Pause gifs with accessible "play" button
 // @author       irrationalpie7
 // @match        https://archiveofourown.org/*
@@ -20,8 +20,11 @@
   document.head.appendChild(importScript);
 
   const setupScript = document.createElement("script");
-  setupScript.innerHTML = `const importScript = document.getElementById("gifa11y-import-script");
+  setupScript.innerHTML = `console.log('added to page');
+  const importScript = document.getElementById("gifa11y-import-script");
+  console.log(importScript);
   importScript.addEventListener("load", () => {
+    console.log('load happened');
     const gifa11y = new Gifa11y({
       container: "main",
       buttonBackground: "#000000",
