@@ -105,8 +105,9 @@
   display: flex;
   align-items: center;
   color: #0176b8; /* var(--primary-blue); */
-  margin-bottom: 0;
-  margin-inline: 1em;
+  margin: 0;
+  margin-top: 0.5em;
+  margin-left: -10px;
 }
 
 #workskin .jpay .socials {
