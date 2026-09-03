@@ -7,7 +7,7 @@
   --neutral: #777;
   --default-text: black;
   --light-text: white;
-  --default-background: #fffc;
+  --default-background: #fffb;
   /* neutral background is slightly transparent * /
   --neutral-background: #d0cccb50;
   --beige-background: #fef8d2cc;
@@ -19,6 +19,10 @@
   max-width: 100%;
   box-sizing: border-box;
   font-family: sans-serif;
+}
+
+#workskin .jpay :not(#bogus) {
+  box-sizing: border-box;
 }
 
 #workskin .jpay div:not(.jpay-header),
@@ -34,14 +38,16 @@
 }
 
 #workskin .jpay .jpay-inbox,
-#workskin .jpay .jpay-compose {
+#workskin .jpay .jpay-compose,
+#workskin .jpay .jpay-header {
   padding: 1em;
   padding-top: 0;
 }
 
 #workskin .jpay .jpay-header {
-  padding-bottom: 0;
+  padding-bottom: 0.75em;
   border-top: 10px solid #0176b8; /* var(--primary-blue); */
+  background-color: #fffb; /* var(--default-background); */
 }
 
 #workskin .jpay .address-bar {
@@ -90,8 +96,6 @@
 #workskin .jpay .jpay-header-1 > li,
 #workskin .jpay .jpay-header-2 > li {
   /* correction for missing gap on parent */
-  margin-left: 0.5em;
-  margin-right: 0.5em;
   margin: 0.5em;
   display: inline-flex;
   box-sizing: border-box;
@@ -102,8 +106,7 @@
   align-items: center;
   color: #0176b8; /* var(--primary-blue); */
   margin-bottom: 0;
-  margin-left: 1em;
-  margin-right: 1em;
+  margin-inline: 1em;
 }
 
 #workskin .jpay .socials {
@@ -111,26 +114,19 @@
   align-items: center;
 }
 
-#workskin .jpay .header-bar {
-  background-color: #fffc; /* var(--default-background); */
-  border-radius: 5px;
-}
-
 #workskin .jpay .jpay-header-1 {
   color: #4a5974; /* var(--secondary-blue); */
   justify-content: end;
   padding: 0.25em;
-  margin-top: 0;
-  margin-left: 0.5em;
-  margin-right: 0.5em;
+  margin-block: 0;
+  margin-inline: -0.5em;
 }
 
 #workskin .jpay .jpay-header-2 {
   color: white; /* var(--light-text); */
   background-color: #4a5974; /* var(--secondary-blue); */
   padding: 0.5em;
-  margin-left: 1em;
-  margin-right: 1em;
+  margin-bottom: 0;
 }
 
 #workskin .jpay .button {
@@ -179,13 +175,14 @@
 #workskin .jpay .jpay-inbox h4,
 #workskin .jpay .jpay-compose h4 {
   color: #4a5974; /* var(--secondary-blue); */
-  background-color: #fffc; /* var(--default-background); */
+  background-color: #fffb; /* var(--default-background); */
   padding-left: 5px;
   padding-right: 5px;
   width: fit-content;
   box-sizing: border-box;
   font-size: 1.25rem;
   border-radius: 5px;
+  margin-block: 0.75em;
 }
 
 #workskin .jpay .compose-letter {
