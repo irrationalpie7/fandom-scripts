@@ -30,7 +30,7 @@
     if (cached === true || cached === false) {
       return cached;
     }
-    const computed = !!document.querySelector(selector)?.textContent;
+    const computed = !!document.querySelector(selector)?.textContent?.trim();
     containsMap.set(selector, computed);
     return computed;
   }
@@ -102,6 +102,9 @@
       }
       style.width = style.width || style.minWidth;
       style.minWidth = "";
+      if (containsText) {
+        style.minWidth = "6rem";
+      }
       if (style.width && !style.maxWidth) {
         style.maxWidth = "100%";
       }
