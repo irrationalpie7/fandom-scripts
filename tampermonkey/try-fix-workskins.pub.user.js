@@ -13,32 +13,64 @@
 (function () {
   "use strict";
 
-  function tryFixWorkskin() {
+  /** Helper for pasting into console */
+  function findRule(selector) {
     const workskinCss = Array.from(document.styleSheets).filter(
       ({ cssRules }) =>
         Array.from(cssRules).every((r) => r.cssText.startsWith("#workskin ")),
     )[0];
+    const workskinRules = Array.from(workskinCss.cssRules);
+    return workskinRules.filter((r) => r.cssText.includes(selector));
+  }
 
-    if (!workskinCss) {
-      console.log("hmmmm no workskin to fix");
-      return;
+  /** Used to check whether it makes sense to have a max height or not */
+  const containsMap = new Map();
+  function containsText(selector) {
+    const cached = containsMap.get(selector);
+    if (cached === true || cached === false) {
+      return cached;
     }
-    console.log("transforming workskin!");
+    const computed = !!document.querySelector(selector)?.textContent;
+    containsMap.set(selector, computed);
+    return computed;
+  }
 
+  const workskinCss = Array.from(document.styleSheets).filter(({ cssRules }) =>
+    Array.from(cssRules).every((r) => r.cssText.startsWith("#workskin ")),
+  )[0];
+
+  if (!workskinCss) {
+    console.log("hmmmm no workskin to fix");
+    return;
+  }
+  console.log("transforming workskin!");
+
+  function tryFixWorkskin(workskinCss) {
     const workskinRules = Array.from(workskinCss.cssRules);
 
-    workskinRules.forEach((r) => {
-      // console.log("before:");
-      // console.log(r.cssText);
-      process(r.style);
-      // console.log("after:");
-      // console.log(r.cssText);
-      return;
+    const deleteRules = [];
+
+    workskinRules.forEach((r, i) => {
+      // Leave screen-reader rules alone
+      if (r.cssText.includes("clip: rect(0px, 0px, 0px, 0px);")) {
+        return;
+      }
+
+      // Remove empty ::before / ::after rules
+      if (
+        r.cssText.includes('content: ""') &&
+        (r.selectorText.includes("::before") ||
+          r.selectorText.includes("::after"))
+      ) {
+        deleteRules.push(i);
+        return;
+      }
+      process(r.style, containsText(r.selectorText));
     });
 
-    console.log(workskinRules);
+    deleteRules.reverse().forEach((i) => workskinCss.deleteRule(i));
 
-    function process(style) {
+    function process(style, containsText) {
       // No major color
       if (style.color) {
         style.border = `1px solid ${style.color}`;
@@ -49,14 +81,33 @@
         style.border = `1px solid ${style.backgroundColor}`;
         style.backgroundColor = "";
       }
+      if (style.backgroundImage) {
+        const matches = /rgb[^)]*\)/.exec(style.backgroundImage);
+        if (matches && matches.length > 0) {
+          style.border = `1px solid ${matches[0]}`;
+        }
+        style.backgroundImage = "";
+      }
+      style.textShadow = "";
 
       // Set reasonable widths
       style.boxSizing = "border-box";
+      if (
+        style.maxWidth &&
+        !style.maxWidth.endsWith("%") &&
+        !style.width &&
+        !style.minWidth
+      ) {
+        style.width = style.maxWidth;
+      }
       style.width = style.width || style.minWidth;
-      if (!style.maxWidth.endsWith("%")) {
+      style.minWidth = "";
+      if (style.width && !style.maxWidth) {
         style.maxWidth = "100%";
       }
-      style.minWidth = "";
+      if (style.maxWidth && !style.maxWidth.endsWith("%")) {
+        style.maxWidth = "100%";
+      }
       if (style.whiteSpace === "nowrap") {
         style.whiteSpace = "";
       }
@@ -67,8 +118,11 @@
 
       // No scrolling
       style.overflow = "";
-      if (style.height) {
+      if (style.height && containsText) {
         style.height = "fit-content";
+      }
+      if (style.maxHeight && containsText) {
+        style.maxHeight = "fit-content";
       }
 
       // Reset some custom positioning weirdness
@@ -80,6 +134,23 @@
       normalizeMargin(style, "Left");
       normalizeMargin(style, "Right");
       style.transform = "";
+      // get rid of floats
+      if (style.float === "left") {
+        style.marginRight = "auto";
+      }
+      if (style.float === "right") {
+        style.marginLeft = "auto";
+      }
+      if (style.float === "inline-start") {
+        style.marginInlineEnd = "auto";
+      }
+      if (style.float === "inline-end") {
+        style.marginInlineStart = "auto";
+      }
+      if (style.float && !style.display) {
+        style.display = "block";
+      }
+      style.float = "";
 
       // Allow selecting text
       if (style.userSelect) {
@@ -99,16 +170,25 @@
       ) {
         style[`margin${propertyName}`] = "";
       }
-      // style[`padding${propertyName}`] = style[`margin${propertyName}`];
-      // style[`margin${propertyName}`] = "";
     }
   }
 
-  tryFixWorkskin();
+  tryFixWorkskin(workskinCss);
   // If the workskin has some rules that mask other rules, they may get skipped the first time
-  tryFixWorkskin();
-  tryFixWorkskin();
-  tryFixWorkskin();
-  tryFixWorkskin();
-  tryFixWorkskin();
+  tryFixWorkskin(workskinCss);
+  tryFixWorkskin(workskinCss);
+
+  // Set max width of 100% for 'container'-type elements
+  workskinCss.insertRule(
+    `#workskin [role="article"] .userstuff > div:not(#bogus#bogus#bogus),
+     #workskin [role="article"].userstuff > div:not(#bogus#bogus#bogus),
+     #workskin div#chapters > div.chapter > div.userstuff.module > div {
+       max-width: 100%;
+     }`,
+  );
+
+  // Remove empty paragraphs
+  Array.from(document.querySelectorAll("p:not([class])"))
+    .filter((p) => p.textContent.trim() === "")
+    .forEach((p) => p.remove());
 })();
