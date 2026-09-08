@@ -84,4 +84,4 @@ This extension adds pinyin accent marks to work/series pages and blurbs on AO3 f
 
 ## Try to fix workskins
 
-This script makes some transformations to creators' workskins to try to make them work on a wider range of devices and with a wider range of siteskins. [Install script to try fixing workskins](ttps://github.com/irrationalpie7/fandom-scripts/raw/main/tampermonkey/try-fix-workskins.pub.user.js)
+This script makes some transformations to creators' workskins to try to make them work on a wider range of devices and with a wider range of siteskins. [Install script to try fixing workskins](https://github.com/irrationalpie7/fandom-scripts/raw/main/tampermonkey/try-fix-workskins.pub.user.js)
