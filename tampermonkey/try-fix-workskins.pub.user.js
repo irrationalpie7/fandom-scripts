@@ -3,7 +3,7 @@
 // @namespace    irrationalpie
 // @match        https://archiveofourown.org/*
 // @grant        none
-// @version      2026-09-08
+// @version      2026-09-08-v2
 // @author       irrationalpie
 // @description  Automatically make some changes to workskin css on ao3 to try to make it work with a wider range of devices and site skins
 // @updateURL   https://github.com/irrationalpie7/fandom-scripts/raw/main/tampermonkey/try-fix-workskins.pub.user.js
@@ -70,6 +70,62 @@
 
     deleteRules.reverse().forEach((i) => workskinCss.deleteRule(i));
 
+    /** Fix wonky width assignments */
+    function processWidth(style, containsText) {
+      let debug = false;
+      if (style.maxWidth === "180px") {
+        debug = true;
+      }
+      if (debug) {
+        console.log(`${style.minWidth}; ${style.width}; ${style.maxWidth}`);
+      }
+      // If the person set a min width without setting a width,
+      // they probably meant it as a width
+      if (style.minWidth && !style.width) {
+        style.width = style.minWidth;
+        style.minWidth = "";
+      }
+
+      // If the person set a non-% max-width without setting a width
+      // they probably meant it as a width
+      if (!style.width && style.maxWidth && !style.maxWidth.endsWith("%")) {
+        style.width = style.maxWidth;
+        style.maxWidth = "";
+      }
+
+      // If the person set a non-% max-width with a % width, they probably
+      // meant the values to be swapped
+      if (
+        /[0-9]/.test(style.maxWidth) &&
+        !style.maxWidth.endsWith("%") &&
+        style.width.endsWith("%")
+      ) {
+        console.log(
+          `Swapping: old width: ${style.width}; max: ${style.maxWidth}`,
+        );
+        const w = style.width;
+        style.width = style.maxWidth;
+        style.maxWidth = w;
+        console.log(
+          `Swapping: new width: ${style.width}; max: ${style.maxWidth}`,
+        );
+      }
+
+      // If they set a width, and the element can contain text,
+      // set a min width to try to avoid the case where e.g. each
+      // letter wraps to a new line
+      style.minWidth = containsText && style.width ? "6rem" : "";
+
+      // If there's a width, constrain with a max width
+      if (style.width && !style.maxWidth) {
+        style.maxWidth = "100%";
+      }
+
+      if (debug) {
+        console.log(`${style.minWidth}; ${style.width}; ${style.maxWidth}`);
+      }
+    }
+
     function process(style, containsText) {
       // No major color
       if (style.color) {
@@ -91,32 +147,14 @@
       style.textShadow = "";
 
       // Set reasonable widths
+      processWidth(style, containsText);
       style.boxSizing = "border-box";
-      if (
-        style.maxWidth &&
-        !style.maxWidth.endsWith("%") &&
-        !style.width &&
-        !style.minWidth
-      ) {
-        style.width = style.maxWidth;
-      }
-      style.width = style.width || style.minWidth;
-      style.minWidth = "";
-      if (containsText) {
-        style.minWidth = "6rem";
-      }
-      if (style.width && !style.maxWidth) {
-        style.maxWidth = "100%";
-      }
-      if (style.maxWidth && !style.maxWidth.endsWith("%")) {
-        style.maxWidth = "100%";
-      }
-      if (style.whiteSpace === "nowrap") {
-        style.whiteSpace = "";
-      }
       if (style.display === "table") {
         // (table doesn't respect width)
         style.display = "flow-root";
+      }
+      if (style.whiteSpace === "nowrap") {
+        style.whiteSpace = "";
       }
 
       // No scrolling
@@ -167,6 +205,11 @@
     }
 
     function normalizeMargin(style, propertyName) {
+      const padding = /[0-9]+/.exec(style[`padding${propertyName}`])?.[0] ?? 0;
+      if (padding > 15) {
+        style[`padding${propertyName}`] = "15px";
+        style[`margin${propertyName}`] = "auto";
+      }
       if (
         style[`margin${propertyName}`] &&
         style[`margin${propertyName}`].startsWith("-")
@@ -193,5 +236,6 @@
   // Remove empty paragraphs
   Array.from(document.querySelectorAll("p:not([class])"))
     .filter((p) => p.textContent.trim() === "")
+    .filter((p) => p.childElementCount === 0)
     .forEach((p) => p.remove());
 })();
