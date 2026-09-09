@@ -72,13 +72,6 @@
 
     /** Fix wonky width assignments */
     function processWidth(style, containsText) {
-      let debug = false;
-      if (style.maxWidth === "180px") {
-        debug = true;
-      }
-      if (debug) {
-        console.log(`${style.minWidth}; ${style.width}; ${style.maxWidth}`);
-      }
       // If the person set a min width without setting a width,
       // they probably meant it as a width
       if (style.minWidth && !style.width) {
@@ -100,15 +93,9 @@
         !style.maxWidth.endsWith("%") &&
         style.width.endsWith("%")
       ) {
-        console.log(
-          `Swapping: old width: ${style.width}; max: ${style.maxWidth}`,
-        );
         const w = style.width;
         style.width = style.maxWidth;
         style.maxWidth = w;
-        console.log(
-          `Swapping: new width: ${style.width}; max: ${style.maxWidth}`,
-        );
       }
 
       // If they set a width, and the element can contain text,
@@ -117,12 +104,8 @@
       style.minWidth = containsText && style.width ? "6rem" : "";
 
       // If there's a width, constrain with a max width
-      if (style.width && !style.maxWidth) {
+      if (style.width && !style.maxWidth.endsWith("%")) {
         style.maxWidth = "100%";
-      }
-
-      if (debug) {
-        console.log(`${style.minWidth}; ${style.width}; ${style.maxWidth}`);
       }
     }
 
@@ -208,6 +191,10 @@
       const padding = /[0-9]+/.exec(style[`padding${propertyName}`])?.[0] ?? 0;
       if (padding > 15) {
         style[`padding${propertyName}`] = "15px";
+        style[`margin${propertyName}`] = "auto";
+      }
+      const margin = /[0-9]+/.exec(style[`margin${propertyName}`])?.[0] ?? 0;
+      if (margin > 50) {
         style[`margin${propertyName}`] = "auto";
       }
       if (
