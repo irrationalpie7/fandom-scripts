@@ -120,7 +120,7 @@
         style.border = `1px solid ${style.backgroundColor}`;
         style.backgroundColor = "";
       }
-      if (style.backgroundImage) {
+      if (style.backgroundImage && containsText) {
         const matches = /rgb[^)]*\)/.exec(style.backgroundImage);
         if (matches && matches.length > 0) {
           style.border = `1px solid ${matches[0]}`;
