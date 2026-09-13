@@ -3,7 +3,7 @@
 // @namespace    irrationalpie
 // @match        https://archiveofourown.org/*
 // @grant        none
-// @version      2026-09-08-v2
+// @version      2026-09-12
 // @author       irrationalpie
 // @description  Automatically make some changes to workskin css on ao3 to try to make it work with a wider range of devices and site skins
 // @updateURL   https://github.com/irrationalpie7/fandom-scripts/raw/main/tampermonkey/try-fix-workskins.pub.user.js
@@ -112,18 +112,18 @@
     function process(style, containsText) {
       // No major color
       if (style.color) {
-        style.border = `1px solid ${style.color}`;
+        style.border = `2px solid ${style.color}`;
         style.color = "";
       }
       // (if both background color and color are specified, use bg for border)
       if (style.backgroundColor) {
-        style.border = `1px solid ${style.backgroundColor}`;
+        style.border = `2px solid ${style.backgroundColor}`;
         style.backgroundColor = "";
       }
       if (style.backgroundImage && containsText) {
         const matches = /rgb[^)]*\)/.exec(style.backgroundImage);
         if (matches && matches.length > 0) {
-          style.border = `1px solid ${matches[0]}`;
+          style.border = `2px solid ${matches[0]}`;
         }
         style.backgroundImage = "";
       }
