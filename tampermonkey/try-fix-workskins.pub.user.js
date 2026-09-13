@@ -112,18 +112,18 @@
     function process(style, containsText) {
       // No major color
       if (style.color) {
-        style.border = `2px solid ${style.color}`;
+        style.border = `2px groove ${style.color}`;
         style.color = "";
       }
       // (if both background color and color are specified, use bg for border)
       if (style.backgroundColor) {
-        style.border = `2px solid ${style.backgroundColor}`;
+        style.border = `2px groove ${style.backgroundColor}`;
         style.backgroundColor = "";
       }
       if (style.backgroundImage && containsText) {
         const matches = /rgb[^)]*\)/.exec(style.backgroundImage);
         if (matches && matches.length > 0) {
-          style.border = `2px solid ${matches[0]}`;
+          style.border = `2px groove ${matches[0]}`;
         }
         style.backgroundImage = "";
       }
