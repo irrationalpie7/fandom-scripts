@@ -3,7 +3,7 @@
 // @namespace    irrationalpie
 // @match        https://archiveofourown.org/*
 // @grant        none
-// @version      2026-09-12
+// @version      2026-09-18
 // @author       irrationalpie
 // @description  Automatically make some changes to workskin css on ao3 to try to make it work with a wider range of devices and site skins
 // @updateURL   https://github.com/irrationalpie7/fandom-scripts/raw/main/tampermonkey/try-fix-workskins.pub.user.js
@@ -120,12 +120,19 @@
         style.border = `2px groove ${style.backgroundColor}`;
         style.backgroundColor = "";
       }
-      if (style.backgroundImage && containsText) {
-        const matches = /rgb[^)]*\)/.exec(style.backgroundImage);
-        if (matches && matches.length > 0) {
-          style.border = `2px groove ${matches[0]}`;
+      if (style.backgroundImage) {
+        if (containsText) {
+          const matches = /rgb[^)]*\)/.exec(style.backgroundImage);
+          if (matches && matches.length > 0) {
+            style.border = `2px groove ${matches[0]}`;
+          }
+          style.backgroundImage = "";
+        } else {
+          // element may become "inline-ish" and not respect height;
+          // this prevents the image from getting cropped, though if
+          // it would be cropped it'll instead be tiny.
+          style.backgroundSize = "contain";
         }
-        style.backgroundImage = "";
       }
       style.textShadow = "";
 
