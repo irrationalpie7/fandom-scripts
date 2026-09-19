@@ -1,0 +1,125 @@
+#workskin .blog {
+  max-width: 70%;
+  width: 500px;
+  font-size: 1rem;
+  line-height: 1.5;
+  position: relative;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  font-family: tahoma, sans-serif;
+}
+
+#workskin .blog p,
+#workskin .blog div,
+#workskin .blog q {
+  width: fit-content;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+#workskin .blog h4 {
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin-block-end: 1rem;
+}
+
+#workskin .blog .blog-byline {
+  width: 100%;
+  margin-bottom: 15px;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: center;
+  font-size: 0.8rem;
+  text-align: center;
+}
+
+#workskin .blog .blog-byline p {
+  padding: 5px;
+  border-radius: 5px;
+  background: rgb(0, 0, 0, 0.15);
+  width: fit-content;
+  box-sizing: border-box;
+  max-width: 100%;
+  margin-inline-end: 0.5rem;
+  margin-block: 0.25rem;
+}
+
+#workskin .blog .paras {
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+#workskin .blog .paras q {
+  border: 1px solid;
+  border-radius: 5px;
+  padding: 0.5rem;
+  text-align: center;
+  font-style: italic;
+}
+
+#workskin .blog .paras p {
+  font-family: arial, sans-serif;
+  margin-block-start: 15px;
+}
+#workskin .blog .paras p:first-of-type {
+  margin-block-start: 0;
+}
+
+#workskin .blog .paras p:last-of-type {
+  margin-block-end: 0;
+}
+
+#workskin .blog img.right,
+#workskin .blog img.left {
+  display: block;
+  max-width: 200px;
+  border-radius: 15px;
+  margin-bottom: 10px;
+}
+
+#workskin .blog img.right {
+  float: right;
+  margin-left: 15px;
+}
+
+#workskin .blog img.left {
+  float: left;
+  margin-right: 15px;
+}
+
+#workskin .blog .share {
+  font-size: 0.8rem;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: center;
+  margin-top: 15px;
+}
+
+#workskin .blog .share p {
+  width: fit-content;
+  max-width: 100%;
+  margin: 0;
+  margin-inline-end: 0.25rem;
+}
+
+#workskin .blog .share ul {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  padding: 0;
+  margin: 0;
+}
+
+#workskin .blog .share li {
+  display: inline-flex;
+  margin: 0.15rem;
+  padding: 3px;
+  border: 1px solid;
+  border-radius: 5px;
+  opacity: 0.8;
+}
