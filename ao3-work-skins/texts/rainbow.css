@@ -1,0 +1,33 @@
+#workskin .phone .red {
+  outline: 2px ridge #ed665b;
+}
+
+#workskin .phone .orange {
+  outline: 2px ridge #faa03e;
+}
+
+#workskin .phone .yellow {
+  outline: 2px ridge #fcc934;
+}
+
+/* 
+ * The comma and extra line are how you'd add 
+ * a "hulk" or "lantern" alias for "green".
+ */
+#workskin .phone .green,
+#workskin .phone .hulk,
+#workskin .phone .lantern {
+  outline: 2px ridge #5bb974;
+}
+
+#workskin .phone .lightblue {
+  outline: 2px ridge #4ecde6;
+}
+
+#workskin .phone .purple {
+  outline: 2px ridge #af5cf7;
+}
+
+#workskin .phone .pink {
+  outline: 2px ridge #ff63b8;
+}
