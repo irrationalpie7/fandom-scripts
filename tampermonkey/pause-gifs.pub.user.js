@@ -18,17 +18,12 @@
   setupScript.innerHTML = `import Gifa11y from "https://cdn.jsdelivr.net/gh/adamchaboryk/gifa11y@2.2.2/dist/js/gifa11y.esm.min.js";
   const gifa11y = new Gifa11y({
     container: 'main',
-    buttonBackground: '#000000',
-    buttonBackgroundHover: '#404040',
-    buttonIconColor: 'white',
-    missingAltWarning: false
+    missingAltWarning: false,
+    initiallyPaused: true
   });
   window.gifa11y = gifa11y;
   setTimeout(() => {
     gifa11y.findNew();
   }, 3_000);`;
   document.head.appendChild(setupScript);
-
-  const images = Array.from(document.querySelectorAll("img"));
-  images.forEach((image) => image.classList.add("gifa11y-paused"));
 })();
