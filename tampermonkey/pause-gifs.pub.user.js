@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         AO3 pause gifs
-// @version      1.0
+// @version      1.1
 // @description  Pause gifs with accessible "play" button
 // @author       irrationalpie7
 // @match        https://archiveofourown.org/*
