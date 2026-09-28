@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         AO3 fix archive.org links
-// @version      0.1
+// @version      1.0
 // @description  Detect and fix fragile archive.org links
 // @author       irrationalpie7
 // @match        https://archiveofourown.org/*
@@ -39,7 +39,7 @@
       link.link = url.href;
       const archiveOrgFragile =
         /https?:\/\/[^/]+archive\.org\/\d+\/items\/(?<details>[^/]+)\/(?<rest>.*)/;
-      const match = archiveOrgFragile.exec(link.link).groups;
+      const match = archiveOrgFragile.exec(link.link);
       if (!match) {
         return false;
       }
@@ -57,7 +57,7 @@
   }
 
   const link = fragileLinks[0];
-  const commentText = `It looks like you're using archive.org as a host and are using the <a href="https://archive.org/help/audio.php">fragile form of the archive.org link</a>, which stops working after a while. Instead of "${link.link}", your link(s) should look like "${link.newUrl}". You can get the right link format by going to <a href="${link.details}">${link.details}</a>, clicking "show all" under the download options, then right-clicking or long-pressing the file you want to link to and copying the link.`;
+  const commentText = `It looks like you're using archive.org as a host and are using the <a href="https://archive.org/help/audio.php">fragile form of the archive.org link</a>, which stops working after a while. Instead of <strong>"${link.link}"</strong>, your link(s) should look like <strong>"${link.newUrl}"</strong>. You can get the right link format by going to <a href="${link.details}">${link.details}</a>, clicking "show all" under the download options, then right-clicking or long-pressing the file you want to link to, and copying the link.`;
 
   // Comment box
   /** @type {HTMLTextAreaElement} */
@@ -68,7 +68,7 @@
   // Inform the viewer
   const dl = document.querySelector("dl.work.meta.group");
   const dt = document.createElement("dt");
-  dt.textContent = "Fragile links detected";
+  dt.innerHTML = "<strong>Fragile archive.org links detected</strong>";
   dl.appendChild(dt);
   const dd = document.createElement("dd");
 
@@ -76,7 +76,7 @@
     dd.innerHTML = `Hi! ${commentText}`;
   } else if (commentBox) {
     const button = document.createElement("button");
-    dd.innerHTML = `<strong>Note:</strong> Hi! ${commentText}`;
+    dd.innerHTML = `<details><summary>Note for the work creator:</summary><p>Hi! ${commentText}</p></details>`;
     button.textContent = "Add note to comment box";
     button.onclick = () => {
       if (commentBox.value) {
@@ -87,7 +87,7 @@
     };
     dd.insertBefore(button, dd.firstChild);
   } else {
-    dd.innerHTML = `This author doesn't appear to allow commenting. If you have another way to contact them, you could pass on this message: Hi! ${commentText}`;
+    dd.innerHTML = `<details><summary>Message for the creator, if you have their contact info:</summary><p>Hi! ${commentText}</p></details>`;
   }
   dl.appendChild(dd);
 })();
