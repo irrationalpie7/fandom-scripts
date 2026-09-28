@@ -76,12 +76,16 @@ This script adds a button to the **bottom** of any page that has a bunch of work
 
 ## Pause gifs on ao3
 
-This extension auto-pauses gifs in ao3 works and adds buttons to start/stop the gif playing. [Install gif pausing userscript](https://github.com/irrationalpie7/fandom-scripts/raw/main/tampermonkey/pause-gifs.pub.user.js).
+This extension auto-pauses gifs in ao3 works and adds buttons to start/stop the gif playing. [Install gif-pausing userscript](https://github.com/irrationalpie7/fandom-scripts/raw/main/tampermonkey/pause-gifs.pub.user.js).
 
 ## Tone Marks II
 
-This extension adds pinyin accent marks to work/series pages and blurbs on AO3 for some fandoms. More info [here](https://github.com/irrationalpie7/AO3-Tone-Marks).
+This extension adds pinyin accent marks to work/series pages and blurbs on AO3 for some fandoms. [Tone Marks now lives here](https://github.com/Cathalinaheart/AO3-Tone-Marks).
 
 ## Try to fix workskins
 
-This script makes some transformations to creators' workskins to try to make them work on a wider range of devices and with a wider range of siteskins. [Install script to try fixing workskins](https://github.com/irrationalpie7/fandom-scripts/raw/main/tampermonkey/try-fix-workskins.pub.user.js)
+This script makes some transformations to creators' workskins to try to make them work on a wider range of devices and with a wider range of siteskins. [Install script to try fixing workskins](https://github.com/irrationalpie7/fandom-scripts/raw/main/tampermonkey/try-fix-workskins.pub.user.js).
+
+## Fix archive.org links
+
+Fix fragile archive.org links when looking at a work that has bad links. It will also provide a button to pre-fill a comment to inform the work creator (or, if you are the creator, it will show you that message directly when you preview your draft). [Install link-fixing userscript](https://github.com/irrationalpie7/fandom-scripts/raw/main/tampermonkey/fix-archive-links.pub.user.js).
