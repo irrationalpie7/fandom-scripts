@@ -38,7 +38,7 @@
 #workskin .blog .blog-byline p {
   padding: 5px;
   border-radius: 5px;
-  background: rgb(0, 0, 0, 0.15);
+  background: rgb(125, 125, 125, 0.3);
   width: fit-content;
   box-sizing: border-box;
   max-width: 100%;
@@ -51,6 +51,7 @@
   display: flex;
   flex-direction: column;
   align-items: center;
+  font-family: arial, sans-serif;
 }
 
 #workskin .blog .paras q {
@@ -61,34 +62,32 @@
   font-style: italic;
 }
 
-#workskin .blog .paras p {
-  font-family: arial, sans-serif;
+#workskin .blog .paras p,
+#workskin .blog .paras q,
+#workskin .blog .paras figure {
   margin-block-start: 15px;
-}
-#workskin .blog .paras p:first-of-type {
-  margin-block-start: 0;
-}
-
-#workskin .blog .paras p:last-of-type {
   margin-block-end: 0;
 }
 
-#workskin .blog img.right,
-#workskin .blog img.left {
-  display: block;
-  max-width: 200px;
-  border-radius: 15px;
-  margin-bottom: 10px;
+#workskin .blog .paras p:first-child,
+#workskin .blog .paras q:first-child,
+#workskin .blog .paras figure:first-child {
+  margin-block-start: 0;
 }
 
-#workskin .blog img.right {
-  float: right;
-  margin-left: 15px;
+#workskin .blog figure {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
-#workskin .blog img.left {
-  float: left;
-  margin-right: 15px;
+#workskin .blog figcaption {
+  text-align: center;
+  font-style: italic;
+}
+
+#workskin .blog img {
+  max-width: 100%;
 }
 
 #workskin .blog .share {
