@@ -1,7 +1,7 @@
 #workskin .blog {
-  max-width: 70%;
+  max-width: 80%;
   width: 500px;
-  font-size: 1rem;
+  font-size: 0.9rem;
   line-height: 1.5;
   position: relative;
   margin: 0 auto;
@@ -19,7 +19,7 @@
 }
 
 #workskin .blog h4 {
-  font-size: 1.5rem;
+  font-size: 1.2rem;
   font-weight: bold;
   margin-block-end: 1rem;
 }
@@ -31,7 +31,7 @@
   flex-direction: row;
   flex-wrap: wrap;
   align-items: center;
-  font-size: 0.8rem;
+  font-size: 0.7rem;
   text-align: center;
 }
 
@@ -93,7 +93,7 @@
 }
 
 #workskin .blog .share {
-  font-size: 0.8rem;
+  font-size: 0.7rem;
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
