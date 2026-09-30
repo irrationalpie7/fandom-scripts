@@ -1,0 +1,372 @@
+/* Note: text between pairs of /* will disappear when you save your workskin. It's just there to provide explanation. */
+
+/* Some helpers */
+#workskin .phone :not(#bogus) {
+  box-sizing: border-box;
+}
+#workskin .phone p:not([class]) {
+  margin: 0;
+}
+
+/* TODO: remove (only here for previewing with light/reversi) */
+#workskin {
+  color: #2a2a2a;
+
+  /* color: #eee;
+  background-color: #333; */
+
+  display: flex;
+  flex-direction: row;
+  align-items: start;
+  flex-wrap: wrap;
+}
+
+/* The body of the phone */
+#workskin .phone {
+  width: 300px;
+  max-width: 100%;
+  box-sizing: border-box;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  margin-inline: auto;
+  margin-block: 1rem;
+  border: 2px ridge #aaa;
+  padding: 0;
+  padding-block-end: 0.4rem;
+  overflow-wrap: break-word;
+  display: flex;
+  flex-direction: column;
+}
+
+#workskin .phone .messages {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+/* Hides text when style is *on*. Copied from: https://github.com/angular/components/blob/main/src/cdk/a11y/_index.scss#L4C3-L35C4 */
+#workskin .hiddeninfo:not(#bogus) {
+  border: 0;
+  clip: rect(0 0 0 0);
+  height: 1px;
+  margin: -1px;
+  overflow: hidden;
+  padding: 0;
+  position: absolute;
+  width: 1px;
+
+  /* This works around a Chrome bug that can cause the tab to crash when large amounts of
+   * non-English text get wrapped: https://bugs.chromium.org/p/chromium/issues/detail?id=1201444
+   */
+  white-space: nowrap;
+
+  /* Avoid browsers rendering the focus ring in some cases. */
+  outline: 0;
+
+  /* Avoid some cases where the browser will still render the native controls (see #9049). */
+  -webkit-appearance: none;
+  -moz-appearance: none;
+
+  /* We need at least one of top/bottom/left/right in order to prevent cases where the
+   * absolute-positioned element is pushed down and can affect scrolling (see #24597).
+   * `left` was chosen here, because it's the least likely to break overrides where the
+   * element might have been positioned (e.g. `mat-checkbox`). 
+   */
+  left: 0;
+}
+
+/* Respecify font family for phoneheader since h3/h4 normally has its own special rules */
+#workskin .phone h3,
+#workskin .phone h4 {
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
+#workskin .phone .phoneheader {
+  box-sizing: border-box;
+  border-bottom: 2px ridge #b2b2b2;
+  font-weight: bold;
+  padding: 0.5rem;
+  margin: 0;
+  text-align: center;
+  width: 100%;
+}
+
+/* Chat bubbles -- non-pov on left, pov on right */
+#workskin .pov,
+#workskin .non-pov {
+  display: flex;
+  flex-direction: column;
+  margin-inline: 0.5rem;
+  margin-block: 2px;
+  box-sizing: border-box;
+  border-radius: 1rem;
+  padding: 0;
+  border: 2px ridge;
+  /* .pov.text / .non-pov.text */
+  width: max-content;
+  max-width: 75%;
+}
+
+#workskin .pov img,
+#workskin .non-pov img {
+  box-sizing: border-box;
+  width: 100%;
+  border-radius: 0.85rem;
+  margin: 0;
+}
+
+#workskin .text {
+  box-sizing: border-box;
+  display: block;
+  padding-block-start: 0.4rem;
+  padding-block-end: 0.5rem;
+  padding-inline: 1rem;
+  width: max-content;
+}
+
+/* .text when it's inside a .pov or .non-pov */
+#workskin .pov .text,
+#workskin .non-pov .text {
+  width: max-content;
+  max-width: 100%;
+  margin: 0;
+}
+
+#workskin .pov:has(img:is([alt=""], :not([alt])))::after,
+#workskin .non-pov:has(img:is([alt=""], :not([alt])))::after {
+  content: "TODO: missing image alt text. Add a 1-2 sentence description of what this image represents, for non-sighted users or as a stand-in if the link to the image breaks.";
+  font-weight: bold;
+  text-align: center;
+  outline: 5px dotted red;
+}
+
+/* Adjust rounded corners for texts/images */
+#workskin .pov {
+  align-self: end;
+  border-end-end-radius: 0.2rem;
+  border-start-end-radius: 0.2rem;
+}
+#workskin .pov img {
+  border-end-end-radius: 0.1rem;
+  border-start-end-radius: 0.1rem;
+}
+#workskin .non-pov {
+  align-self: start;
+  border-end-start-radius: 0.2rem;
+  border-start-start-radius: 0.2rem;
+}
+#workskin .non-pov img {
+  border-end-start-radius: 0.1rem;
+  border-start-start-radius: 0.1rem;
+}
+
+/* Adjust rounded corners even more for images */
+#workskin .pov:has(.text) img,
+#workskin .non-pov:has(.text) img {
+  border-end-end-radius: 0;
+  border-end-start-radius: 0;
+  border: inherit;
+  border-inline-start: none;
+  border-inline-end: none;
+  border-block-start: none;
+}
+#workskin .pov:has(.who) img,
+#workskin .non-pov:has(.who) img {
+  border-start-end-radius: 0;
+  border-start-start-radius: 0;
+}
+
+/* Quote-reply to messages */
+#workskin .phone blockquote {
+  box-sizing: border-box;
+  border: inherit;
+  border-width: 4px;
+  border-style: solid;
+  border-inline-end: none;
+  border-block-start: none;
+  border-block-end: none;
+  padding-block-start: 0.2rem;
+  padding-block-end: 0.3rem;
+  padding-inline: 0.4rem;
+  margin-inline: 0.4rem;
+  margin-block-start: 0.5rem;
+  margin-block-end: 0;
+  border-start-start-radius: 0.6rem;
+  border-end-start-radius: 0.6rem;
+  display: flex;
+  flex-direction: column;
+  /* Very transparent mid-gray background */
+  background-color: #a0a0a020;
+}
+
+/* Hide overflowing quoted texts with '...' */
+#workskin .phone blockquote .text {
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+
+#workskin .phone blockquote p {
+  display: flex;
+  flex-direction: column;
+}
+
+#workskin .phone .messages blockquote .who,
+#workskin .phone .messages blockquote .text {
+  background-image: none;
+  padding: 0;
+  margin: 0;
+}
+
+#workskin .info {
+  align-self: center;
+  font-size: 0.8rem;
+  display: block;
+  margin: 0;
+  text-align: center;
+  max-width: 80%;
+}
+
+/* spacing above each text or info (as long as it's not a double-text) */
+#workskin .pov:has(.who:not(.inner)),
+#workskin .non-pov:has(.who:not(.inner)),
+#workskin .info {
+  border-start-start-radius: 1rem;
+  border-start-end-radius: 1rem;
+  margin-top: 1rem;
+}
+
+#workskin .who {
+  display: block;
+  box-sizing: border-box;
+  margin: 0;
+  width: 100%;
+  font-size: 0.8rem;
+  padding-block: 0.2rem;
+  padding-inline: 1.4rem;
+  border-start-start-radius: 0.85rem;
+  /* inherit border-color */
+  border: inherit;
+  border-inline-start: none;
+  border-inline-end: none;
+  border-block-start: none;
+}
+
+#workskin .who strong,
+#workskin .who {
+  font-weight: normal;
+}
+
+/* non-pov texts default to gray */
+#workskin .phone .gray,
+#workskin .phone .non-pov {
+  border-color: #c5c5ca;
+}
+#workskin .phone .gray .who,
+#workskin .phone .non-pov .who {
+  background-image: linear-gradient(
+    to right,
+    #c5c5cac0 0.5rem,
+    #c5c5ca00 1.3rem 100%
+  );
+}
+
+/* pov texts default to blue */
+#workskin .phone .blue,
+#workskin .phone .pov {
+  border-color: #1289fe;
+}
+
+#workskin .phone .blue .who,
+#workskin .phone .pov .who {
+  background-image: linear-gradient(
+    to right,
+    #1289fec0 0.5rem,
+    #1289fe00 1.3rem 100%
+  );
+}
+
+#workskin .phone .red {
+  border-color: #ed665b;
+}
+
+#workskin .phone .red .who {
+  background-image: linear-gradient(
+    to right,
+    #ed665bc0 0.5rem,
+    #ed665b00 1.3rem 100%
+  );
+}
+
+#workskin .phone .orange {
+  border-color: #faa03e;
+}
+
+#workskin .phone .orange .who {
+  background-image: linear-gradient(
+    to right,
+    #faa03ec0 0.5rem,
+    #faa03e00 1.3rem 100%
+  );
+}
+
+#workskin .phone .yellow {
+  border-color: #fcc934;
+}
+
+#workskin .phone .yellow .who {
+  background-image: linear-gradient(
+    to right,
+    #fcc934c0 0.5rem,
+    #fcc93400 1.3rem 100%
+  );
+}
+
+#workskin .phone .green {
+  border-color: #5bb974;
+}
+
+#workskin .phone .green .who {
+  background-image: linear-gradient(
+    to right,
+    #5bb974c0 0.5rem,
+    #5bb97400 1.3rem 100%
+  );
+}
+
+#workskin .phone .lightblue {
+  border-color: #4ecde6;
+}
+
+#workskin .phone .lightblue .who {
+  background-image: linear-gradient(
+    to right,
+    #4ecde6c0 0.5rem,
+    #4ecde600 1.3rem 100%
+  );
+}
+
+#workskin .phone .purple {
+  border-color: #af5cf7;
+}
+
+#workskin .phone .purple .who {
+  background-image: linear-gradient(
+    to right,
+    #af5cf7c0 0.5rem,
+    #af5cf700 1.3rem 100%
+  );
+}
+
+#workskin .phone .pink {
+  border-color: #ff63b8;
+}
+
+#workskin .phone .pink .who {
+  background-image: linear-gradient(
+    to right,
+    #ff63b8c0 0.5rem,
+    #ff63b800 1.3rem 100%
+  );
+}
