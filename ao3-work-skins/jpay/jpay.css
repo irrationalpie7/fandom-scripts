@@ -110,6 +110,10 @@
   margin-left: -10px;
 }
 
+#workskin .jpay .logo img {
+  width: 70px;
+}
+
 #workskin .jpay .socials {
   display: flex;
   align-items: center;
