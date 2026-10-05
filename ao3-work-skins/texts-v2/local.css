@@ -1,0 +1,36 @@
+/* You probably don't want to copy any of this into your workskin */
+#workskin {
+  color: #2a2a2a;
+
+  /* display: flex;
+  flex-direction: row;
+  align-items: start;
+  flex-wrap: wrap; */
+}
+
+/* this is already included */
+.hidden {
+  display: none;
+}
+
+.light {
+  padding: 1rem;
+  color: #2a2a2a;
+  background-color: white;
+}
+
+.dark {
+  padding: 1rem;
+  color: #eee;
+  background-color: #333;
+}
+
+blockquote {
+  margin-inline-start: 0.5em;
+  padding: 0.75em;
+  border-inline-start: 2px solid #999;
+}
+
+blockquote p {
+  margin: 0;
+}

@@ -2,16 +2,17 @@
 <html lang="en">
   <head>
     <link rel="stylesheet" type="text/css" href="./texting.css" />
+    <link rel="stylesheet" type="text/css" href="./local.css" />
     <title>Chat test</title>
   </head>
   <body>
     <div id="workskin">
       <hr />
 
-      <div class="phone">
-        <h3 class="phoneheader" id="unique-id">
-          <span class="hiddeninfo">Group chat: </span>Title of a group chat
-        </h3>
+      <div class="phone hide-pov hide-non-pov">
+        <p class="phoneheader" id="unique-id">
+          <span class="hiddeninfo">Texts with: </span>Character 2
+        </p>
         <div class="messages" role="log" aria-labelledby="unique-id">
           <p class="info"><strong>Today </strong>6:15 AM</p>
 
@@ -70,7 +71,12 @@
 
           <p class="non-pov purple">
             <strong class="who">Character 2</strong><br />
-            <span class="text">Nothing much</span>
+            <span class="text"
+              >Nothing much
+              <strong
+                >@Character 4 with a really really really long name</strong
+              ></span
+            >
           </p>
 
           <p class="non-pov purple">
@@ -85,9 +91,10 @@
 
       <hr />
 
-      <div class="phone">
+      <div class="phone hide-pov">
         <h3 class="phoneheader" id="unique-id">
-          <span class="hiddeninfo">Group chat: </span>Title of a group chat
+          <span class="hiddeninfo">Group chat: </span>Chat where pov name is
+          hidden (except in replies)
         </h3>
         <div class="messages" role="log" aria-labelledby="unique-id">
           <p class="non-pov pink">
@@ -141,9 +148,10 @@
 
       <hr />
 
-      <div class="phone">
+      <div class="phone hide-non-pov">
         <h3 class="phoneheader" id="unique-id">
-          <span class="hiddeninfo">Group chat: </span>Title of a group chat
+          <span class="hiddeninfo">Group chat: </span>Chat where non-pov names
+          are hidden (except in replies)
         </h3>
         <div class="messages" role="log" aria-labelledby="unique-id">
           <div class="pov">
