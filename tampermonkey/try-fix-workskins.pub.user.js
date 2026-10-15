@@ -3,7 +3,7 @@
 // @namespace    irrationalpie
 // @match        https://archiveofourown.org/*
 // @grant        none
-// @version      2026-09-18
+// @version      2026-10-14
 // @author       irrationalpie
 // @description  Automatically make some changes to workskin css on ao3 to try to make it work with a wider range of devices and site skins
 // @updateURL   https://github.com/irrationalpie7/fandom-scripts/raw/main/tampermonkey/try-fix-workskins.pub.user.js
@@ -38,6 +38,31 @@
   const workskinCss = Array.from(document.styleSheets).filter(({ cssRules }) =>
     Array.from(cssRules).every((r) => r.cssText.startsWith("#workskin ")),
   )[0];
+
+  const workskin = document.getElementById("workskin");
+  if (!workskin) {
+    console.log("not a work--nothing to fix");
+    return;
+  }
+
+  // Remove empty paragraphs
+  Array.from(document.querySelectorAll("p:not([class])"))
+    .filter((p) => p.textContent.trim() === "")
+    .filter((p) => p.childElementCount === 0)
+    .forEach((p) => p.remove());
+
+  // Remove gratuitous non-breaking spaces
+  const walker = document.createTreeWalker(workskin, NodeFilter.SHOW_TEXT);
+  while (walker.nextNode()) {
+    // Allow &nbsp; if there's at least three in a row (e.g., ascii art)
+    if (/   +/.test(walker.currentNode.textContent)) {
+      continue;
+    }
+    walker.currentNode.textContent = walker.currentNode.textContent.replaceAll(
+      / /g,
+      " ",
+    );
+  }
 
   if (!workskinCss) {
     console.log("hmmmm no workskin to fix");
@@ -226,10 +251,4 @@
        max-width: 100%;
      }`,
   );
-
-  // Remove empty paragraphs
-  Array.from(document.querySelectorAll("p:not([class])"))
-    .filter((p) => p.textContent.trim() === "")
-    .filter((p) => p.childElementCount === 0)
-    .forEach((p) => p.remove());
 })();
