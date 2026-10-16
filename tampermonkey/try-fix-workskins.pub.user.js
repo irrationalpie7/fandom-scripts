@@ -3,7 +3,7 @@
 // @namespace    irrationalpie
 // @match        https://archiveofourown.org/*
 // @grant        none
-// @version      2026-10-14
+// @version      2026-10-15
 // @author       irrationalpie
 // @description  Automatically make some changes to workskin css on ao3 to try to make it work with a wider range of devices and site skins
 // @updateURL   https://github.com/irrationalpie7/fandom-scripts/raw/main/tampermonkey/try-fix-workskins.pub.user.js
@@ -203,8 +203,12 @@
       if (style.float === "inline-end") {
         style.marginInlineStart = "auto";
       }
-      if (style.float && !style.display) {
-        style.display = "block";
+      if (style.float && (!style.display || style.display.includes("inline"))) {
+        const replacement = style.display
+          .replace(/-inline-/, "-")
+          .replace(/inline-?/, "")
+          .trim();
+        style.display = replacement || "block";
       }
       style.float = "";
 
@@ -220,11 +224,6 @@
     }
 
     function normalizeMargin(style, propertyName) {
-      const padding = /[0-9]+/.exec(style[`padding${propertyName}`])?.[0] ?? 0;
-      if (padding > 15) {
-        style[`padding${propertyName}`] = "15px";
-        style[`margin${propertyName}`] = "auto";
-      }
       const margin = /[0-9]+/.exec(style[`margin${propertyName}`])?.[0] ?? 0;
       if (margin > 50) {
         style[`margin${propertyName}`] = "auto";
