@@ -44,10 +44,6 @@
     return computed;
   }
 
-  const workskinCss = Array.from(document.styleSheets).filter(({ cssRules }) =>
-    Array.from(cssRules).every((r) => r.cssText.startsWith("#workskin ")),
-  )[0];
-
   const workskin = document.getElementById("workskin");
   if (!workskin) {
     console.log("not a work--nothing to fix");
@@ -94,6 +90,11 @@
   }
   weirdAnchors.forEach((a) => a.removeAttribute("href"));
 
+  /**
+   * @type {CSSStyleSheet}
+   */
+  const workskinCss = document.querySelector("#work-skin style")?.sheet; // Note that the parent element is #work-skin, a wrapper outside #workskin
+
   if (!workskinCss) {
     console.log("hmmmm no workskin to fix");
     return;
@@ -128,9 +129,26 @@
         deleteRules.push(i);
         return;
       }
-      const x = r.style;
-      const a = x;
-      process(r.style, containsText(r.selectorText));
+      /**
+       * @type{CSSStyleProperties}
+       */
+      const style = r.style;
+      // Experimental minimum spacing around pseudo elements
+      if (
+        r.selectorText.includes("::before") ||
+        r.selectorText.includes("::after")
+      ) {
+        if (
+          style.position === "absolute" ||
+          style.left ||
+          style.right ||
+          style.top ||
+          style.bottom
+        ) {
+          style.margin = ".5em";
+        }
+      }
+      process(style, containsText(r.selectorText));
     });
 
     deleteRules.reverse().forEach((i) => workskinCss.deleteRule(i));
@@ -235,9 +253,6 @@
       if (style.position === "absolute") {
         style.position = "";
       }
-      ["top", "bottom", "left", "right"].forEach((pos) =>
-        normalizePosition(style, pos),
-      );
       ["Top", "Bottom", "Left", "Right"].forEach((pos) =>
         normalizeMargin(style, pos),
       );
@@ -273,33 +288,6 @@
       if (style.textAlign === "justify") {
         style.textAlign = "left";
       }
-    }
-
-    /**
-     *
-     * @param {CSSStyleProperties} style
-     * @param {'bottom'|'top'|'left'|'right'} propertyName
-     */
-    function normalizePosition(style, propertyName) {
-      const opposites = {
-        bottom: "top",
-        top: "bottom",
-        right: "left",
-        left: "right",
-      };
-      const position = style.position;
-      style.position = "absolute";
-      const absolutePos = style[propertyName];
-      const oppositePos = style[opposites[propertyName]];
-      if (!absolutePos) {
-        style.position = position;
-        return;
-      }
-      if (!oppositePos) {
-        style[`margin${opposites[propertyName]}`] = "auto";
-      }
-      style[`margin${propertyName}`] = absolutePos;
-      style.position = position;
     }
 
     /**
