@@ -3,7 +3,7 @@
 // @namespace    irrationalpie
 // @match        https://archiveofourown.org/*
 // @grant        none
-// @version      2026-10-15
+// @version      2026-10-16
 // @author       irrationalpie
 // @description  Automatically make some changes to workskin css on ao3 to try to make it work with a wider range of devices and site skins
 // @updateURL   https://github.com/irrationalpie7/fandom-scripts/raw/main/tampermonkey/try-fix-workskins.pub.user.js
@@ -13,7 +13,11 @@
 (function () {
   "use strict";
 
-  /** Helper for pasting into console */
+  /**
+   * Helper for pasting into console
+   * @param {string} selector
+   * @returns {CSSRule[]}
+   */
   function findRule(selector) {
     const workskinCss = Array.from(document.styleSheets).filter(
       ({ cssRules }) =>
@@ -25,6 +29,11 @@
 
   /** Used to check whether it makes sense to have a max height or not */
   const containsMap = new Map();
+  /**
+   * Check whether an element has text content
+   * @param {string} selector
+   * @returns {boolean}
+   */
   function containsText(selector) {
     const cached = containsMap.get(selector);
     if (cached === true || cached === false) {
@@ -64,15 +73,44 @@
     );
   }
 
+  // Remove gratuitous anchor hrefs
+  const weirdAnchors = Array.from(
+    document.querySelectorAll("#workskin a[href]"),
+  ).filter((a) => {
+    const href = a.getAttribute("href");
+    return !(
+      href === null ||
+      href.startsWith("http://") ||
+      href.startsWith("https://") ||
+      href.startsWith("#") ||
+      href.startsWith("/")
+    );
+  });
+  if (weirdAnchors.length > 0) {
+    console.log(
+      "Getting rid of faulty links:",
+      new Set(weirdAnchors.map((a) => a.href)),
+    );
+  }
+  weirdAnchors.forEach((a) => a.removeAttribute("href"));
+
   if (!workskinCss) {
     console.log("hmmmm no workskin to fix");
     return;
   }
   console.log("transforming workskin!");
 
+  /**
+   * Try fixing the workskin
+   *
+   * @param {CSSStyleSheet} workskinCss
+   */
   function tryFixWorkskin(workskinCss) {
     const workskinRules = Array.from(workskinCss.cssRules);
 
+    /**
+     * @type {number[]}
+     */
     const deleteRules = [];
 
     workskinRules.forEach((r, i) => {
@@ -90,12 +128,18 @@
         deleteRules.push(i);
         return;
       }
+      const x = r.style;
+      const a = x;
       process(r.style, containsText(r.selectorText));
     });
 
     deleteRules.reverse().forEach((i) => workskinCss.deleteRule(i));
 
-    /** Fix wonky width assignments */
+    /**
+     * Fix wonky width assignments
+     * @param {CSSStyleProperties} style
+     * @param {string} containsText
+     */
     function processWidth(style, containsText) {
       // If the person set a min width without setting a width,
       // they probably meant it as a width
@@ -134,6 +178,12 @@
       }
     }
 
+    /**
+     * Update the style according to some heuristics
+     *
+     * @param {CSSStyleProperties} style the style properties to update
+     * @param {boolean} containsText whether an element associated with this rule has any text
+     */
     function process(style, containsText) {
       // No major color
       if (style.color) {
@@ -185,10 +235,12 @@
       if (style.position === "absolute") {
         style.position = "";
       }
-      normalizeMargin(style, "Bottom");
-      normalizeMargin(style, "Top");
-      normalizeMargin(style, "Left");
-      normalizeMargin(style, "Right");
+      ["top", "bottom", "left", "right"].forEach((pos) =>
+        normalizePosition(style, pos),
+      );
+      ["Top", "Bottom", "Left", "Right"].forEach((pos) =>
+        normalizeMargin(style, pos),
+      );
       style.transform = "";
       // get rid of floats
       if (style.float === "left") {
@@ -223,7 +275,45 @@
       }
     }
 
+    /**
+     *
+     * @param {CSSStyleProperties} style
+     * @param {'bottom'|'top'|'left'|'right'} propertyName
+     */
+    function normalizePosition(style, propertyName) {
+      const opposites = {
+        bottom: "top",
+        top: "bottom",
+        right: "left",
+        left: "right",
+      };
+      const position = style.position;
+      style.position = "absolute";
+      const absolutePos = style[propertyName];
+      const oppositePos = style[opposites[propertyName]];
+      if (!absolutePos) {
+        style.position = position;
+        return;
+      }
+      if (!oppositePos) {
+        style[`margin${opposites[propertyName]}`] = "auto";
+      }
+      style[`margin${propertyName}`] = absolutePos;
+      style.position = position;
+    }
+
+    /**
+     *
+     * @param {CSSStyleProperties} style
+     * @param {'Bottom'|'Top'|'Left'|'Right'} propertyName
+     */
     function normalizeMargin(style, propertyName) {
+      const padding = /[0-9]+/.exec(style[`padding${propertyName}`])?.[0] ?? 0;
+      // there's some trick with padding + percents used with background images
+      if (padding > 15 && !style[`padding${propertyName}`].includes("%")) {
+        style[`padding${propertyName}`] = "15px";
+        style[`margin${propertyName}`] = "auto";
+      }
       const margin = /[0-9]+/.exec(style[`margin${propertyName}`])?.[0] ?? 0;
       if (margin > 50) {
         style[`margin${propertyName}`] = "auto";
