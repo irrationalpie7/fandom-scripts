@@ -89,3 +89,7 @@ This script makes some transformations to creators' workskins to try to make the
 ## Fix archive.org links
 
 Fix fragile archive.org links when looking at a work that has bad links. It will also provide a button to pre-fill a comment to inform the work creator (or, if you are the creator, it will show you that message directly when you preview your draft). [Install link-fixing userscript](https://github.com/irrationalpie7/fandom-scripts/raw/main/tampermonkey/fix-archive-links.pub.user.js).
+
+## AO3 prompt display tweaks
+
+When looking at a collection's prompts page, fold fulfilled claims so that it's easier to just look at the prompts. This script also adds a "Link to prompt" button if the prompt is still claimable. [Install prompt-display userscript](https://github.com/irrationalpie7/fandom-scripts/raw/main/tampermonkey/prompt-tweaks.pub.user.js).

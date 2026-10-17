@@ -1,13 +1,11 @@
 // ==UserScript==
 // @name         AO3 fix archive.org links
-// @version      1.0
+// @version      2026-10-16
 // @description  Detect and fix fragile archive.org links
 // @author       irrationalpie7
 // @match        https://archiveofourown.org/*
-// clang-format off
 // @updateURL    https://github.com/irrationalpie7/fandom-scripts/raw/main/tampermonkey/fix-archive-links.pub.user.js
 // @downloadURL  https://github.com/irrationalpie7/fandom-scripts/raw/main/tampermonkey/fix-archive-links.pub.user.js
-// clang-format on
 // ==/UserScript==
 
 (async () => {
@@ -87,7 +85,7 @@
     };
     dd.insertBefore(button, dd.firstChild);
   } else {
-    dd.innerHTML = `<details><summary>Message for the creator, if you have their contact info:</summary><p>Hi! ${commentText}</p></details>`;
+    dd.innerHTML = `<details><summary style="padding: .5rem; margin-block-end: .5rem;">Message for the creator, if you have their contact info:</summary><p>Hi! ${commentText}</p></details>`;
   }
   dl.appendChild(dd);
 })();

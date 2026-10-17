@@ -4,10 +4,8 @@
 // @description  Pause gifs with accessible "play" button
 // @author       irrationalpie7
 // @match        https://archiveofourown.org/*
-// clang-format off
 // @updateURL    https://github.com/irrationalpie7/fandom-scripts/raw/main/tampermonkey/pause-gifs.pub.user.js
 // @downloadURL  https://github.com/irrationalpie7/fandom-scripts/raw/main/tampermonkey/pause-gifs.pub.user.js
-// clang-format on
 // ==/UserScript==
 
 (async () => {

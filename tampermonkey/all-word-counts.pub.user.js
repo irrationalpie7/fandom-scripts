@@ -4,11 +4,9 @@
 // @description  Add chapter word counts on a work's full-page index
 // @author       irrationalpie7
 // @match        https://archiveofourown.org/works/*/navigate*
-// clang-format off
 // @updateURL    https://github.com/irrationalpie7/fandom-scripts/raw/main/tampermonkey/all-word-counts.pub.user.js
 // @downloadURL  https://github.com/irrationalpie7/fandom-scripts/raw/main/tampermonkey/all-word-counts.pub.user.js
 // @require      https://github.com/irrationalpie7/words-count/raw/master/src/globalWordsCount.js
-// clang-format on
 // ==/UserScript==
 
 (async () => {
