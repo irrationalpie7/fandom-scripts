@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         AO3 Bookmark info autofill
-// @version      1.1
+// @version      1.2
 // @description  Automatically add work info to the ao3 bookmark form whenever it is opened.
 // @author       irrationalpie7
 // @match        https://archiveofourown.org/*
@@ -23,9 +23,12 @@
   const formTriggers = Array.from(
     document.querySelectorAll('[class*="bookmark_form_trigger"]'),
   );
-  formTriggers.forEach((trigger) =>
-    trigger.addEventListener("click", () => scanForElements()),
-  );
+  formTriggers.forEach((trigger) => {
+    trigger.addEventListener("click", () =>
+      /* Wait for the form to load after the click before scanning */
+      setTimeout(() => scanForElements(), 500),
+    );
+  });
 
   /* following two are similar, check first *then* second if failed first */
   const work_bookmarks_url =
@@ -53,7 +56,7 @@
       return;
     }
     /* check if we've looked at this form yet since loading the page */
-    if (seen.includes(bookmarkId)) {
+    if (seen.has(bookmarkId)) {
       return;
     }
     seen.add(bookmarkId);
@@ -75,12 +78,14 @@
 
     const textArea = bookmarkForm.querySelector("textarea");
 
-    if (!textArea.value.includes(titleText + "</a>")) {
-      if (textArea.value === "") {
-        textArea.value = workInfo;
-      } else {
-        textArea.value += "\n\n" + workInfo;
-      }
+    /* Return early if the textarea already has a link to the title */
+    if (textArea.value.includes(`>${titleText}</a>`)) {
+      return;
+    }
+    if (textArea.value === "") {
+      textArea.value = workInfo;
+    } else {
+      textArea.value += "\n\n" + workInfo;
     }
   }
 
@@ -157,7 +162,7 @@
   }
 
   function scanForElements() {
-    // $("[id='idofelement']") due to multiple elements with same id being possible on ao3 bookmark page
+    /* $("[id='idofelement']") due to multiple elements with same id being possible on ao3 bookmark page */
     const targetNodes = Array.from(
       document.querySelectorAll("[id='bookmark-form']"),
     );
