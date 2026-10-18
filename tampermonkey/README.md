@@ -30,7 +30,7 @@ If there's already text in the AO3 bookmark, it'll append the title/author info 
 
 If you would like to use this as a bookmarklet rather than installing it as a userscript:
 
-1. Copy everything starting at the line that goes `/* javascript: (() => { */` (currently line 13) to the line that goes `/* autopopulateWorkInfo(document.querySelector("#bookmark-form"));})(); */` (currently line 95), inclusive, into a file
+1. Copy everything starting at the line that goes `/* javascript: (() => { */` (currently line 17) to the line that goes `/* })(); */` (currently line 167), inclusive, into a file
 2. Remove the `/*` and `*/` from _only the new first and last lines mentioned in step 1_
 3. Copy the whole thing into the url for the bookmarklet
 4. Use the bookmarklet once you've got the create/edit bookmark form open
