@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         AO3 Bookmark info autofill
-// @version      1.2
+// @version      1.3
 // @description  Automatically add work info to the ao3 bookmark form whenever it is opened.
 // @author       irrationalpie7
 // @match        https://archiveofourown.org/*
@@ -21,7 +21,9 @@
 
   /* set things up so that any time a bookmark form appears, we re-scan */
   const formTriggers = Array.from(
-    document.querySelectorAll('[class*="bookmark_form_trigger"]'),
+    document.querySelectorAll(
+      '[class*="bookmark_form_trigger"], .bookmark_form_placement_open',
+    ),
   );
   formTriggers.forEach((trigger) => {
     trigger.addEventListener("click", () =>
