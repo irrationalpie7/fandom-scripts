@@ -1,12 +1,11 @@
 // ==UserScript==
 // @name         AO3 Bookmark info autofill
-// @version      1.4
+// @version      1.5
 // @description  Automatically add work info to the ao3 bookmark form whenever it is opened.
 // @author       irrationalpie7
 // @match        https://archiveofourown.org/*
 // @updateURL    https://github.com/irrationalpie7/fandom-scripts/raw/main/tampermonkey/bookmark-fic-info.pub.user.js
 // @downloadURL  https://github.com/irrationalpie7/fandom-scripts/raw/main/tampermonkey/bookmark-fic-info.pub.user.js
-// @require      http://code.jquery.com/jquery-3.6.0.min.js
 // @grant        none
 // ==/UserScript==
 
