@@ -10,161 +10,154 @@
 // @grant        none
 // ==/UserScript==
 
-/* javascript: (() => { */
+(async () => {
+  "use strict";
 
-/* following two are similar, check first *then* second if failed first */
-const work_bookmarks_url =
-  /https:\/\/archiveofourown\.org\/works\/\d+\/bookmarks/;
-const work_url =
-  /https:\/\/archiveofourown\.org\/(collections\/[^\/]*\/)?works\/\d+/;
-const series_url = /https:\/\/archiveofourown\.org\/series\/\d+/;
-const bookmark_form_url =
-  /https:\/\/archiveofourown\.org\/bookmarks\/\d+\/edit/;
+  /* bookmarklet start below */
+  /* javascript: (() => { */
 
-function autopopulateWorkInfo(bookmarkForm) {
-  if (bookmarkForm === window) {
-    return; /* Don't know why, but the id selector also returns window? */
-  }
-  const href = window.location.href;
-  if (href.match(bookmark_form_url)) {
-    /* Dedicated bookmark edit page, work info not accessable */
-    return;
-  }
+  /* following two are similar, check first *then* second if failed first */
+  const work_bookmarks_url =
+    /https:\/\/archiveofourown\.org\/works\/\d+\/bookmarks/;
+  const work_url =
+    /https:\/\/archiveofourown\.org\/(collections\/[^\/]*\/)?works\/\d+/;
+  const series_url = /https:\/\/archiveofourown\.org\/series\/\d+/;
+  const bookmark_form_url =
+    /https:\/\/archiveofourown\.org\/bookmarks\/\d+\/edit/;
 
-  /* what page is this? can we find the work info? */
-  let title = null;
-  let titleText = null;
-  let authors = null;
-  if (!href.match(work_bookmarks_url) && href.match(work_url)) {
-    titleText = document.querySelector(".title.heading").textContent.trim();
-    title = `<a href="${href}">${titleText}</a>`;
-    authors = getAuthors(
-      document.querySelector(".byline.heading"),
-      'a[rel="author"]'
-    );
-  } else if (href.match(series_url)) {
-    titleText = document.querySelector("#main h2.heading").textContent.trim();
-    title = `<a href=${href}>${titleText}</a>`;
-    authors = getAuthors(document, '.series.meta.group a[rel="author"]');
-  } else {
-    /* Most other pages have the bookmark form nested within a bookmark article */
-    let bookmarkArticle = bookmarkForm.closest("li.bookmark[role=article]");
-    /* If that didn't work, but there's exactly one bookmark on the page, fall back to that. */
-    if (bookmarkArticle === null) {
-      const bookmarks = document.querySelectorAll(
-        "li.work[role=article], li.series[role=article]"
+  const seen = new Set();
+
+  /**
+   * Populate the work info
+   * @param {HTMLElement | null} bookmarkForm
+   * @returns {undefined}
+   */
+  function autopopulateWorkInfo(bookmarkForm) {
+    const form = bookmarkForm?.querySelector("form");
+    /* Make sure it's a bookmark form, and extract an id */
+    const bookmarkId =
+      /(\/bookmarks\/\d+$)|(\/\d+\/bookmarks$)/.exec(form?.action ?? "")?.[0] ??
+      "";
+    if (!bookmarkId) {
+      return;
+    }
+    /* check if we've looked at this form yet since loading the page */
+    if (seen.includes(bookmarkId)) {
+      return;
+    }
+    seen.add(bookmarkId);
+
+    const href = window.location.href;
+    if (href.match(bookmark_form_url)) {
+      /* Dedicated bookmark edit page, work info not accessable */
+      return;
+    }
+
+    /* what page is this? can we find the work info? */
+    let title = null;
+    let titleText = null;
+    let authors = null;
+    if (!href.match(work_bookmarks_url) && href.match(work_url)) {
+      titleText = document.querySelector(".title.heading").textContent.trim();
+      title = `<a href="${href}">${titleText}</a>`;
+      authors = getAuthors(
+        document.querySelector(".byline.heading"),
+        'a[rel="author"]',
       );
-      if (bookmarks.length !== 1) {
-        /* Still couldn't find the bookmark article, so give up */
-        return;
-      }
-      bookmarkArticle = bookmarks[0];
-    }
-
-    const titleElement = bookmarkArticle.querySelector(
-      'h4.heading a[href*="/works/"], h4.heading a[href*="/series/"]'
-    );
-    titleText = titleElement.textContent;
-    title = titleElement.outerHTML;
-    authors = getAuthors(bookmarkArticle, 'h4.heading a[rel="author"]');
-  }
-
-  const workInfo = `${title}\nby ${authors}`;
-
-  const textArea = bookmarkForm.querySelector("textarea");
-
-  if (!textArea.value.includes(titleText + "</a>")) {
-    if (textArea.value === "") {
-      textArea.value = workInfo;
+    } else if (href.match(series_url)) {
+      titleText = document.querySelector("#main h2.heading").textContent.trim();
+      title = `<a href=${href}>${titleText}</a>`;
+      authors = getAuthors(document, '.series.meta.group a[rel="author"]');
     } else {
-      textArea.value += "\n\n" + workInfo;
-    }
-  }
-}
-
-function getAuthors(parent, authorSelector) {
-  const authors = parent.querySelectorAll(authorSelector);
-  if (authors.length === 0) {
-    return "Anonymous";
-  }
-  return Array.from(authors)
-    .map((a) => a.outerHTML)
-    .join(", ");
-}
-
-/* autopopulateWorkInfo(document.querySelector("#bookmark-form"));})(); */
-
-function waitForKeyElements(
-  selectorTxt /* Required: The jQuery selector string that
-                        specifies the desired element(s).
-                    */,
-  actionFunction /* Required: The code to run when elements are
-                        found. It is passed a jNode to the matched
-                        element.
-                    */,
-  bWaitOnce /* Optional: If false, will continue to scan for
-                        new elements even after the first match is
-                        found.
-                    */,
-  iframeSelector /* Optional: If set, identifies the iframe to
-                        search.
-                    */
-) {
-  var targetNodes, btargetsFound;
-
-  if (typeof iframeSelector == "undefined") targetNodes = $(selectorTxt);
-  else targetNodes = $(iframeSelector).contents().find(selectorTxt);
-
-  if (targetNodes && targetNodes.length > 0) {
-    btargetsFound = true;
-    /*--- Found target node(s).  Go through each and act if they
-            are new.
-        */
-    targetNodes.each(function () {
-      var jThis = $(this);
-      var alreadyFound = jThis.data("alreadyFound2") || false;
-
-      if (!alreadyFound) {
-        //--- Call the payload function.
-        var cancelFound = actionFunction(jThis[0]);
-        if (cancelFound) btargetsFound = false;
-        else jThis.data("alreadyFound2", true);
-      }
-    });
-  } else {
-    btargetsFound = false;
-  }
-
-  //--- Get the timer-control variable for this selector.
-  var controlObj = waitForKeyElements.controlObj || {};
-  var controlKey = selectorTxt.replace(/[^\w]/g, "_");
-  var timeControl = controlObj[controlKey];
-
-  //--- Now set or clear the timer as appropriate.
-  if (btargetsFound && bWaitOnce && timeControl) {
-    //--- The only condition where we need to clear the timer.
-    clearInterval(timeControl);
-    delete controlObj[controlKey];
-  } else {
-    //--- Set a timer, if needed.
-    if (!timeControl) {
-      timeControl = setInterval(function () {
-        waitForKeyElements(
-          selectorTxt,
-          actionFunction,
-          bWaitOnce,
-          iframeSelector
+      /* Most other pages have the bookmark form nested within a bookmark article */
+      let bookmarkArticle = bookmarkForm.closest("li.bookmark[role=article]");
+      /* If that didn't work, but there's exactly one bookmark on the page, fall back to that. */
+      if (bookmarkArticle === null) {
+        const bookmarks = document.querySelectorAll(
+          "li.work[role=article], li.series[role=article]",
         );
-      }, 300);
-      controlObj[controlKey] = timeControl;
+        if (bookmarks.length !== 1) {
+          /* Still couldn't find the bookmark article, so give up */
+          return;
+        }
+        bookmarkArticle = bookmarks[0];
+      }
+
+      const titleElement = bookmarkArticle.querySelector(
+        'h4.heading a[href*="/works/"], h4.heading a[href*="/series/"]',
+      );
+      titleText = titleElement.textContent;
+      title = titleElement.outerHTML;
+      authors = getAuthors(bookmarkArticle, 'h4.heading a[rel="author"]');
+    }
+
+    const workInfo = `${title}\nby ${authors}`;
+
+    const textArea = bookmarkForm.querySelector("textarea");
+
+    if (!textArea.value.includes(titleText + "</a>")) {
+      if (textArea.value === "") {
+        textArea.value = workInfo;
+      } else {
+        textArea.value += "\n\n" + workInfo;
+      }
     }
   }
-  waitForKeyElements.controlObj = controlObj;
-}
 
-// $("[id='idofelement']") due to multiple elements with same id being possible on ao3 bookmark page
-waitForKeyElements(
-  "[id='bookmark-form']",
-  autopopulateWorkInfo,
-  false /*false = continue searching after first*/
-);
+  function getAuthors(parent, authorSelector) {
+    const authors = parent.querySelectorAll(authorSelector);
+    if (authors.length === 0) {
+      return "Anonymous";
+    }
+    return Array.from(authors)
+      .map((a) => a.outerHTML)
+      .join(", ");
+  }
+
+  /* autopopulateWorkInfo(document.querySelector("#bookmark-form"));})(); */
+  /* bookmarklet end above */
+
+  /**
+   * Wait for certain elements to appear.
+   * @param {string} selectorTxt
+   * @param {(element: HTMLElement) => undefined} actionFunction The code to
+   *    run when elements are found. Note: it's up to actionFunction to ignore
+   *    repeated calls after the elements are already found.
+   * @param {boolean | undefined} bWaitOnce If false, will continue to scan for
+   *    new elements even after the first match is
+   *    found.
+   */
+  function waitForKeyElements(selectorTxt, actionFunction, bWaitOnce) {
+    /** @type{Element[]} */
+    const targetNodes = Array.from(document.querySelectorAll(selectorTxt));
+    targetNodes.forEach((node) => actionFunction(node));
+
+    //--- Get the timer-control variable for this selector.
+    var controlObj = waitForKeyElements.controlObj || {};
+    var controlKey = selectorTxt.replace(/[^\w]/g, "_");
+    var timeControl = controlObj[controlKey];
+
+    //--- Now set or clear the timer as appropriate.
+    if (targetNodes.length > 0 && bWaitOnce && timeControl) {
+      //--- The only condition where we need to clear the timer.
+      clearInterval(timeControl);
+      delete controlObj[controlKey];
+    } else {
+      //--- Set a timer, if needed.
+      if (!timeControl) {
+        timeControl = setInterval(function () {
+          waitForKeyElements(selector, actionFunction, bWaitOnce);
+        }, 300);
+        controlObj[controlKey] = timeControl;
+      }
+    }
+    waitForKeyElements.controlObj = controlObj;
+  }
+
+  // $("[id='idofelement']") due to multiple elements with same id being possible on ao3 bookmark page
+  waitForKeyElements(
+    "[id='bookmark-form']",
+    autopopulateWorkInfo,
+    false /*false = continue searching after first*/,
+  );
+})();
