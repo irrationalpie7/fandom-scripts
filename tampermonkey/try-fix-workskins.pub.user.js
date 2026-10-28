@@ -3,7 +3,7 @@
 // @namespace    irrationalpie
 // @match        https://archiveofourown.org/*
 // @grant        none
-// @version      2026-10-16
+// @version      2026-10-28
 // @author       irrationalpie
 // @description  Automatically make some changes to workskin css on ao3 to try to make it work with a wider range of devices and site skins
 // @updateURL   https://github.com/irrationalpie7/fandom-scripts/raw/main/tampermonkey/try-fix-workskins.pub.user.js
@@ -39,9 +39,55 @@
     if (cached === true || cached === false) {
       return cached;
     }
-    const computed = !!document.querySelector(selector)?.textContent?.trim();
-    containsMap.set(selector, computed);
-    return computed;
+    const element = document.querySelector(selector);
+    const elementText = element?.textContent?.trim();
+    const match =
+      !!elementText && hasShownText(element, 2, element.textContent.trim());
+    containsMap.set(selector, match);
+    return match;
+  }
+
+  /**
+   *
+   * @param {HTMLElement} element
+   * @returns {boolean}
+   */
+  function displayNever(element) {
+    try {
+      const styles = [
+        getComputedStyle(element),
+        getComputedStyle(element, ":hover"),
+        getComputedStyle(element, ":focus"),
+      ].map((s) => s.display);
+      return styles.every((s) => s === "none" || s === "");
+    } catch {
+      return false;
+    }
+  }
+
+  /**
+   *
+   * @param {HTMLElement} element
+   * @param {number} depth
+   * @param {string} text
+   * @returns {boolean}
+   */
+  function hasShownText(element, depth, text) {
+    if (displayNever(element) && element.textContent.trim() === text) {
+      return false;
+    }
+    if (depth === 0) {
+      return true;
+    }
+
+    const children = Array.from(element.childNodes);
+    for (const child of children) {
+      const result = hasShownText(child, depth - 1, text);
+      if (!result) {
+        return false;
+      }
+    }
+    return true;
   }
 
   const workskin = document.getElementById("workskin");
@@ -89,6 +135,20 @@
     );
   }
   weirdAnchors.forEach((a) => a.removeAttribute("href"));
+
+  // Fix table max-width
+  const style = document.createElement("style");
+  style.innerHTML = `#workskin#workskin table {
+  table-layout: fixed;
+  width: 100%;
+  max-width: 100%;
+}
+
+#workskin#workskin td,
+#workskin#workskin th {
+  overflow-wrap: break-word;
+}`;
+  document.head.appendChild(style);
 
   /**
    * @type {CSSStyleSheet}
@@ -159,6 +219,11 @@
      * @param {string} containsText
      */
     function processWidth(style, containsText) {
+      // If the person set both min and max but not width, use content
+      if (style.minWidth && style.maxWidth && !style.width) {
+        style.width = "max-content";
+      }
+
       // If the person set a min width without setting a width,
       // they probably meant it as a width
       if (style.minWidth && !style.width) {
@@ -259,16 +324,12 @@
       style.transform = "";
       // get rid of floats
       if (style.float === "left") {
+        style.marginLeft = "0";
         style.marginRight = "auto";
       }
       if (style.float === "right") {
+        style.marginRight = "0";
         style.marginLeft = "auto";
-      }
-      if (style.float === "inline-start") {
-        style.marginInlineEnd = "auto";
-      }
-      if (style.float === "inline-end") {
-        style.marginInlineStart = "auto";
       }
       if (style.float && (!style.display || style.display.includes("inline"))) {
         const replacement = style.display
