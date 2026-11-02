@@ -93,3 +93,7 @@ Fix fragile archive.org links when looking at a work that has bad links. It will
 ## AO3 prompt display tweaks
 
 When looking at a collection's prompts page, fold fulfilled claims so that it's easier to just look at the prompts. This script also adds a "Link to prompt" button if the prompt is still claimable. [Install prompt-display userscript](https://github.com/irrationalpie7/fandom-scripts/raw/main/tampermonkey/prompt-tweaks.pub.user.js).
+
+## AO3 find alternate hosts
+
+When looking at an ao3 work, if you get the "The archive is down for maintenance" message, provide some alternate links to try to find the work. [Install find-alternate-hosts userscript](https://github.com/irrationalpie7/fandom-scripts/raw/main/tampermonkey/find-alternate-hosts.pub.user.js).
