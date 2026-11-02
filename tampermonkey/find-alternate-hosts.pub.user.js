@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         AO3 find alternate hosts
-// @version      2026-10-31
+// @version      2026-11-01
 // @description  Offer alternate fic-finding links
 // @author       irrationalpie7
 // @match        https://archiveofourown.org/*
@@ -87,7 +87,7 @@
 
     addLink(
       waybackify(workUrl.href),
-      `the work url ${workUrl.href}`,
+      `the work url (${workUrl.href})`,
       waybackList,
     );
     addLink(
