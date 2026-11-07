@@ -96,4 +96,4 @@ When looking at a collection's prompts page, fold fulfilled claims so that it's 
 
 ## AO3 find alternate hosts
 
-When looking at an ao3 work, if you get the "The archive is down for maintenance" message, provide some alternate links to try to find the work. [Install find-alternate-hosts userscript](https://github.com/irrationalpie7/fandom-scripts/raw/main/tampermonkey/find-alternate-hosts.pub.user.js).
+When looking at an ao3 work, if you get the "The archive is down for maintenance" message, provide some alternate links to try to find the work. [Install find-alternate-hosts userscript](https://github.com/irrationalpie7/fandom-scripts/raw/main/tampermonkey/find-alternate-hosts.pub.user.js). This script is inspired by [https://www.archivelearning.app/wayback-en.html](https://www.archivelearning.app/wayback-en.html) which offers a similar set of links.
