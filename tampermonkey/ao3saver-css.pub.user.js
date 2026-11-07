@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         ao3saver css injection
-// @version      2026-11-01
+// @version      2026-11-07
 // @description  Add css to ao3saver
 // @author       irrationalpie7
 // @match        https://ao3saver.com/works/*
@@ -32,6 +32,14 @@ a {
 
 a:visited {
   color: var(--visited);
+}
+
+#chapters, .userstuff {
+  padding: .25em;
+}
+
+blockquote.userstuff {
+  padding: 1em;
 }
 
 div,
